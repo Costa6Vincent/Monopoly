@@ -35,8 +35,9 @@ public class Dice {
     public static int addSides()
     {
         int value;
+        
         value=MonopolyProject.dice.getSide()+MonopolyProject.dice2.getSide();
-        return(0);
+        return(value);
     }
 
     public int getSide() {

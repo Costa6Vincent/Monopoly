@@ -1,18 +1,66 @@
 package monopoly.project;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.util.ArrayList;
 import static monopoly.project.MonopolyProject.players;
 public class Player 
 {
     private String name;
     private int Money;
     private int numProperties;
-    private Image splashImage;
+    private Image splashImage=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/b.GIF");
+    private ArrayList<Property>propertyOwnership= new ArrayList<>();
+    private boolean isTurn=false;
+    private int x;
+    private int y;
+    private int numProperty;
+    
+
+   
     
     Player(String _name,int _money,int numProperties)
     {
         name=_name;
         Money=_money;
+    }
+    
+    public void addProperty(Property _property)
+    {
+        if(propertyOwnership==null)
+        {
+            numProperty++;
+            propertyOwnership.add(_property);
+            _property.addPlayer(this);
+        }
+    }
+
+    public ArrayList<Property> getPropertyOwnership() {
+        return propertyOwnership;
+    }
+    
+    public void setIsTurn(boolean isTurn) {
+        this.isTurn = isTurn;
+    }
+
+    public boolean getIsTurn() {
+        return isTurn;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public Image getSplashImage() {
