@@ -102,7 +102,7 @@ public class Property {
     public static void InitializeDataBase()
     {
         
-        Image image1=/*null;*/Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/b.GIF");
+        Image image1=null;/*Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/b.GIF")*/;
         
         property[0][0]=new Property("Free Parking",image1);
         property[0][1]=new Property("Piece 2",250,image1);

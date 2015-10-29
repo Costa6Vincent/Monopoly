@@ -9,7 +9,11 @@ public class Player
     private String name;
     private int Money;
     private int numProperties;
-    private Image splashImage=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/b.GIF");
+    private Image splashImage;
+    static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.GIF");
+    static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.GIF");
+    static private Image player3=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player3.GIF");
+    static private Image player4=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player4.GIF");
     private ArrayList<Property>propertyOwnership= new ArrayList<>();
     private boolean isTurn=false;
     private int x;
@@ -19,10 +23,11 @@ public class Player
 
    
     
-    Player(String _name,int _money,int numProperties)
+    Player(String _name,int _money,int numProperties, Image _Image )
     {
         name=_name;
         Money=_money;
+        splashImage=_Image;
     }
     
     public void addProperty(Property _property)
@@ -102,10 +107,10 @@ public class Player
     
     public static void InitializeDataBase2()
     {
-        players[0]=new Player("Player1",500,0);
-        players[1]=new Player("Player2",500,0);
-        players[2]=new Player("Player3",500,0);
-        players[3]=new Player("Player4",500,0);
+        players[0]=new Player("Player1",500,0,player1);
+        players[1]=new Player("Player2",500,0,player2);
+        players[2]=new Player("Player3",500,0,player3);
+        players[3]=new Player("Player4",500,0,player4);
     }
     
     
