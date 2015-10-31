@@ -2,13 +2,29 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
+        <group name="Group 20151031-10:09:54">
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/Logic/MouseMoved.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Dice.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/Logic/Mouse.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/GUIs/SplashScreen.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Player.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/MonopolyProject.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/GUIs/SplashScreenMenu.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/GUIs/PlayerInfoWindow.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Time.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/Logic/LeftClick.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Property.java</file>
+        </group>
+        <group>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/Logic/MouseMoved.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Dice.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/GUIs/SplashScreen.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Player.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/MonopolyProject.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/GUIs/SplashScreenMenu.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/GUIs/PlayerInfoWindow.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Time.java</file>
+            <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/Logic/LeftClick.java</file>
             <file>file:/K:/Netbeans/CS2/Half%202/Monopoly%20Project/src/monopoly/project/Property.java</file>
         </group>
     </open-files>

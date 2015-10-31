@@ -5,7 +5,9 @@
  */
 package Logic;
 
+import java.awt.Desktop;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import monopoly.project.*;
 
 
@@ -13,7 +15,7 @@ import monopoly.project.*;
  *
  * Code for a Left Click
  */
-public class LeftClick extends monopoly.project.MonopolyProject implements Runnable
+public class LeftClick extends Mouse implements Runnable
 {
     public static void Click1(MouseEvent e)
     {
@@ -22,6 +24,12 @@ public class LeftClick extends monopoly.project.MonopolyProject implements Runna
             if(StartGameH)
             {
                 startMenuAnim=true;
+            }
+            if(HelpH)
+            {
+//                String url = "";
+//                File htmlFile = new File(url);
+//                Desktop.getDesktop().browse(htmlFile.toURI());
             }
             if(ExitH)
             {
@@ -96,12 +104,24 @@ public class LeftClick extends monopoly.project.MonopolyProject implements Runna
                 }
                 else
                     payRent=true;
-                if(currentProperty.getCanPurchase())
+                if(currentProperty.getThePlayer()==currentPerson)
+                {
+                    upgrade=true;
+                }
+                else
+                    upgrade=false;
+                if(currentProperty.getThePlayer()==null&&currentProperty.getCanPurchase())
                 {
                     purchase=true;
                 }
                 else
                     purchase=false;
+                
+                if(!currentProperty.getCanPurchase())
+                {
+                    nextTurn();
+                    return;
+                }
                 diceRoll=false;
                 decision=true;
             }
@@ -116,10 +136,20 @@ public class LeftClick extends monopoly.project.MonopolyProject implements Runna
                 if(xpos>=purchaseX&&xpos<purchaseX+purchaseLength&&ypos>purchaseY-YTITLE&&ypos<purchaseY+purchaseHeight-YTITLE)
                 {
                     currentProperty.addPlayer(currentPerson);
+                    currentProperty.addUpgrade();
                     currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getCost());
                     currentPerson.getAllProperties();
                     nextTurn();
                 }
+                if(xpos>=endTurnX&&xpos<endTurnX+purchaseLength&&ypos>endTurnY-YTITLE&&ypos<endTurnY+purchaseHeight-YTITLE)
+                {
+                    nextTurn();
+                }
+            }
+            else if(upgrade&&xpos>=upgradeX&&xpos<upgradeX+purchaseLength&&ypos>upgradeY-YTITLE&&ypos<upgradeY+purchaseHeight-YTITLE)
+            {
+                currentProperty.addUpgrade();
+                nextTurn();
             }
             else if(currentPerson.getMoney()>=currentProperty.getCost()&&currentProperty.getThePlayer()!=null&&currentProperty.getThePlayer()!=currentPerson)
             {

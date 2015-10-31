@@ -9,10 +9,15 @@ public class Player
     private String name;
     private int Money;
     private Image splashImage;
+    private Image onBoardImage;
     static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.GIF");
     static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.GIF");
     static private Image player3=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player3.GIF");
     static private Image player4=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player4.GIF");
+    static private Image p1onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p1onBoard.PNG");;
+    static private Image p2onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p2onBoard.PNG");;
+    static private Image p3onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p3onBoard.PNG");;
+    static private Image p4onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p4onBoard.PNG");;
     private ArrayList<Property>propertyOwnership= new ArrayList<>();
     private boolean isTurn=false;
     private int x;
@@ -23,11 +28,12 @@ public class Player
 
    
     
-    Player(String _name,int _money,int numProperties, Image _Image )
+    Player(String _name,int _money,int numProperties, Image _Image,Image _Image2 )
     {
         name=_name;
         Money=_money;
         splashImage=_Image;
+        onBoardImage=_Image2;
     }
 
     public boolean getInJail() {
@@ -107,19 +113,28 @@ public class Player
     public void setMoney(int Money) {
         this.Money = Money;
     }
+    public Image getOnBoardImage() {
+        return onBoardImage;
+    }
 
-    public void draw(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
+    public void drawonBoard(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
+    {
+        g.drawImage(getOnBoardImage(), xpos, ypos, length, height,image);
+    }
+    public void drawonWindow(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
     {
         g.drawImage(getSplashImage(), xpos, ypos, length, height,image);
     }
     
     public static void InitializeDataBase2()
     {
-        players[0]=new Player("Player1",500,0,player1);
-        players[1]=new Player("Player2",500,0,player2);
-        players[2]=new Player("Player3",500,0,player3);
-        players[3]=new Player("Player4",500,0,player4);
+        players[0]=new Player("Player1",500,0,player1,p1onBoard);
+        players[1]=new Player("Player2",500,0,player2,p2onBoard);
+        players[2]=new Player("Player3",500,0,player3,p3onBoard);
+        players[3]=new Player("Player4",500,0,player4,p4onBoard);
     }
+
+   
     
     
 }

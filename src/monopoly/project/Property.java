@@ -22,6 +22,7 @@ public class Property {
     private Player thePlayer;
     private boolean canPurchase;
     private boolean isJail;
+    private int upgrade;
 
     public boolean getCanPurchase() {
         return canPurchase;
@@ -40,6 +41,20 @@ public class Property {
         tax=cost/10;
         canPurchase=true;
         isJail=false;
+        upgrade=0; 
+    }
+
+    public void setUpgrade(int upgrade) {
+        this.upgrade = upgrade;
+    }
+    public void addUpgrade()
+    {
+        if(upgrade<4)
+            upgrade++;
+    }
+
+    public int getUpgrade() {
+        return upgrade;
     }
     Property(String _name,Image _splashImage)
     {
@@ -110,67 +125,101 @@ public class Property {
     }
     public void draw(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
     {
-        g.drawImage(getSplashImage(), xpos, ypos, length, height,image);
+        g.drawImage(getSplashImage(), xpos, ypos, length*3/4, height,image);
     }
     
     public static void InitializeDataBase()
     {
         
-        Image image1=null;/*Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/b.GIF")*/;
+        Image image1=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/FreeParking.PNG");
+        Image image2=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][1].PNG");
+        Image image3=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][2].PNG");
+        Image image4=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][3].PNG");
+        Image image5=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][4].PNG");
+        Image image6=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][5].PNG");
+        Image image7=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][6].PNG");
+        Image image8=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][7].PNG");
+        Image image9=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][8].PNG");
+        Image image10=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[0][9].PNG");
+        Image image11=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/GoToJail.PNG");
+        
+        Image image12=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[1][10].PNG");
+        Image image13=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[2][10].PNG");
+        Image image14=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[3][10].PNG");
+        Image image15=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[4][10].PNG");
+        Image image16=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[5][10].PNG");
+        Image image17=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[6][10].PNG");
+        Image image18=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[7][10].PNG");
+        Image image19=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[8][10].PNG");
+        Image image20=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[9][10].PNG");
+        
+        Image image21=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Jail.PNG");
+        Image image22=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][1].PNG");
+        Image image23=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][2].PNG");
+        Image image24=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][3].PNG");
+        Image image25=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][4].PNG");
+        Image image26=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][5].PNG");
+        Image image27=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][6].PNG");
+        Image image28=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][7].PNG");
+        Image image29=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][8].PNG");
+        Image image30=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Piece[10][9].PNG");
+        Image image31=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Go.PNG");
+        
+        
         
         property[0][0]=new Property("Free Parking",image1);
         property[0][0].setCanPurchase(false);
-        property[0][1]=new Property("Piece 2",250,image1);
-        property[0][2]=new Property("Piece 3",300,image1);
-        property[0][3]=new Property("Piece 4",350,image1);
-        property[0][4]=new Property("Piece 5",100,image1);
-        property[0][5]=new Property("Piece 6",50,image1);
-        property[0][6]=new Property("Piece 7",60,image1);
-        property[0][7]=new Property("Piece 8",90,image1);
-        property[0][8]=new Property("Piece 9",250,image1);
-        property[0][9]=new Property("Piece 10",120,image1);
-        property[0][10]=new Property("Go to Jail",image1);
+        property[0][1]=new Property("The Lobby",250,image2);
+        property[0][2]=new Property("Chance",300,image3);
+        property[0][3]=new Property("The CourtYard",350,image4);
+        property[0][4]=new Property("Priest Dining Room",100,image5);
+        property[0][5]=new Property("White Van",50,image6);
+        property[0][6]=new Property("Convent Chapel",60,image7);
+        property[0][7]=new Property("Mary Mother Chapel",90,image8);
+        property[0][8]=new Property("Computer Services",250,image9);
+        property[0][9]=new Property("St. Charles Chapel",120,image10);
+        property[0][10]=new Property("Go to Jail",image11);
         property[0][10].setCanPurchase(false);
         property[0][10].setIsJail(true);
         
         //side right column
-        property[1][10]=new Property("Piece 12",250,image1);
-        property[2][10]=new Property("Piece 13",300,image1);
-        property[3][10]=new Property("Piece 14",350,image1);
-        property[4][10]=new Property("Piece 15",100,image1);
-        property[5][10]=new Property("Piece 16",50,image1);
-        property[6][10]=new Property("Piece 17",60,image1);
-        property[7][10]=new Property("Piece 18",90,image1);
-        property[8][10]=new Property("Piece 19",250,image1);
-        property[9][10]=new Property("Piece 20",120,image1);
+        property[1][10]=new Property("Glennon Lounge",250,image12);
+        property[2][10]=new Property("Priest's Lounge",300,image13);
+        property[3][10]=new Property("Community Chest",350,image14);
+        property[4][10]=new Property("Kenrick Lounge",100,image15);
+        property[5][10]=new Property("Sister's Car",50,image16);
+        property[6][10]=new Property("Chance",60,image17);
+        property[7][10]=new Property("St. Joseph Chapel",90,image18);
+        property[8][10]=new Property("Room and Board",250,image19);
+        property[9][10]=new Property("The Tower",120,image20);
         
         //bottom row
-        property[10][0]=new Property("Jail",image1);
+        property[10][0]=new Property("Jail",image21);
         property[10][0].setCanPurchase(false);
         property[10][0].setIsJail(true);
-        property[10][1]=new Property("Piece 22",250,image1);
-        property[10][2]=new Property("Piece 23",300,image1);
-        property[10][3]=new Property("Piece 24",350,image1);
-        property[10][4]=new Property("Piece 25",100,image1);
-        property[10][5]=new Property("Piece 26",50,image1);
-        property[10][6]=new Property("Piece 27",60,image1);
-        property[10][7]=new Property("Piece 28",90,image1);
-        property[10][8]=new Property("Piece 29",250,image1);
-        property[10][9]=new Property("Piece 30",120,image1);
-        property[10][10]=new Property("Go",image1);
+        property[10][1]=new Property("Weight Room",250,image22);
+        property[10][2]=new Property("Laundry Room",300,image23);
+        property[10][3]=new Property("Chance",350,image24);
+        property[10][4]=new Property("Tennis Court",100,image25);
+        property[10][5]=new Property("Red Van",50,image26);
+        property[10][6]=new Property("Formation Fee",60,image27);
+        property[10][7]=new Property("Boiler Room",90,image28);
+        property[10][8]=new Property("Community Chest",250,image29);
+        property[10][9]=new Property("Wreck Room",120,image30);
+        property[10][10]=new Property("Go",image31);
         property[10][10].setCanPurchase(false);
         
         
         //side left column
-        property[1][0]=new Property("Piece 32",250,image1);
-        property[2][0]=new Property("Piece 33",300,image1);
-        property[3][0]=new Property("Piece 34",350,image1);
-        property[4][0]=new Property("Piece 35",100,image1);
-        property[5][0]=new Property("Piece 36",50,image1);
-        property[6][0]=new Property("Piece 37",60,image1);
-        property[7][0]=new Property("Piece 38",90,image1);
-        property[8][0]=new Property("Piece 39",250,image1);
-        property[9][0]=new Property("Piece 40",120,image1);
+        property[1][0]=new Property("The Refectory",250,image1);
+        property[2][0]=new Property("The Heights",300,image1);
+        property[3][0]=new Property("Community Chest",350,image1);
+        property[4][0]=new Property("The Gym",100,image1);
+        property[5][0]=new Property("Silver Van",50,image1);
+        property[6][0]=new Property("The Auditorium",60,image1);
+        property[7][0]=new Property("The Library",90,image1);
+        property[8][0]=new Property("Kendrick Light",250,image1);
+        property[9][0]=new Property("The Dorm",120,image1);
     }
 
     public boolean getIsJail() {

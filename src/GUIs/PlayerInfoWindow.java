@@ -33,16 +33,35 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
             if(purchase)
             {
                 g.fillRect(purchaseX, purchaseY, purchaseLength, purchaseHeight);
-                text2 = "Purchase";
+                g.fillRect(endTurnX, endTurnY, endTurnLength, endTurnHeight);
+                
+                
+                
                 g.setColor(Color.red);
+                
+                text2 = "Purchase";
                 g.drawString(text2, purchaseX, purchaseY+purchaseHeight*3/4); 
+                
+                
+                text2 = "End Turn";
+                g.drawString(text2, endTurnX, endTurnY+endTurnHeight*3/4); 
+                
             }
             if(payRent)
             {
+                g.setColor(Color.white);
                 g.fillRect(payX, payY, payLength, payHeight);
                 text2 = "Pay Rent";
                 g.setColor(Color.red);
                 g.drawString(text2, payX, payY+payHeight*3/4); 
+            }
+            if(upgrade)
+            {
+                g.setColor(Color.white);
+                g.fillRect(upgradeX, upgradeY, upgradeLength, upgradeHeight);
+                text2 = "Upgrade";
+                g.setColor(Color.red);
+                g.drawString(text2, upgradeX, upgradeY+upgradeHeight*3/4); 
             }
 
         }
