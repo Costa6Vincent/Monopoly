@@ -27,7 +27,7 @@ public class Dice {
     private Image side5=Toolkit.getDefaultToolkit().getImage("./Pictures/Dice/diceSide5.PNG");
     private Image side6=Toolkit.getDefaultToolkit().getImage("./Pictures/Dice/diceSide6.PNG");
     
-    Dice()
+    public Dice()
     {
         side=(int)(Math.random()*6+1);
     }

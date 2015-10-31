@@ -10,7 +10,7 @@ public class Time {
     private int Hours;
     Time()
     {
-        timeCount=3580;
+        timeCount=0;
     }
 
     public int getTimeCount() {

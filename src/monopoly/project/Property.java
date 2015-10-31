@@ -20,6 +20,16 @@ public class Property {
     private Image splashImage;
     private int tax;
     private Player thePlayer;
+    private boolean canPurchase;
+    private boolean isJail;
+
+    public boolean getCanPurchase() {
+        return canPurchase;
+    }
+
+    public void setCanPurchase(boolean canPurchase) {
+        this.canPurchase = canPurchase;
+    }
     
     Property(String _name,int _cost,Image _splashImage)
     {
@@ -28,6 +38,8 @@ public class Property {
         splashImage=_splashImage;
         rent=cost/3;
         tax=cost/10;
+        canPurchase=true;
+        isJail=false;
     }
     Property(String _name,Image _splashImage)
     {
@@ -90,6 +102,8 @@ public class Property {
     public void setSplashImage(Image splashImage) {
         this.splashImage = splashImage;
     }
+    
+
 
     public void setTax(int tax) {
         this.tax = tax;
@@ -105,6 +119,7 @@ public class Property {
         Image image1=null;/*Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/b.GIF")*/;
         
         property[0][0]=new Property("Free Parking",image1);
+        property[0][0].setCanPurchase(false);
         property[0][1]=new Property("Piece 2",250,image1);
         property[0][2]=new Property("Piece 3",300,image1);
         property[0][3]=new Property("Piece 4",350,image1);
@@ -115,6 +130,8 @@ public class Property {
         property[0][8]=new Property("Piece 9",250,image1);
         property[0][9]=new Property("Piece 10",120,image1);
         property[0][10]=new Property("Go to Jail",image1);
+        property[0][10].setCanPurchase(false);
+        property[0][10].setIsJail(true);
         
         //side right column
         property[1][10]=new Property("Piece 12",250,image1);
@@ -129,6 +146,8 @@ public class Property {
         
         //bottom row
         property[10][0]=new Property("Jail",image1);
+        property[10][0].setCanPurchase(false);
+        property[10][0].setIsJail(true);
         property[10][1]=new Property("Piece 22",250,image1);
         property[10][2]=new Property("Piece 23",300,image1);
         property[10][3]=new Property("Piece 24",350,image1);
@@ -139,6 +158,8 @@ public class Property {
         property[10][8]=new Property("Piece 29",250,image1);
         property[10][9]=new Property("Piece 30",120,image1);
         property[10][10]=new Property("Go",image1);
+        property[10][10].setCanPurchase(false);
+        
         
         //side left column
         property[1][0]=new Property("Piece 32",250,image1);
@@ -150,6 +171,14 @@ public class Property {
         property[7][0]=new Property("Piece 38",90,image1);
         property[8][0]=new Property("Piece 39",250,image1);
         property[9][0]=new Property("Piece 40",120,image1);
+    }
+
+    public boolean getIsJail() {
+        return isJail;
+    }
+
+    public void setIsJail(boolean isJail) {
+        this.isJail = isJail;
     }
     
     

@@ -10,19 +10,24 @@ import java.awt.*;
 import java.io.File;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.util.Locale;
 import javax.sound.sampled.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public final class MonopolyProject extends JFrame implements Runnable {
+public class MonopolyProject extends JFrame implements Runnable {
     
-    static final int numRows = 11;
-    static final int numColumns = 11;
-    static final int YTITLE = 30;
-    static final int XBORDER = 30;
-    static final int YBORDER = 30;
-    static final int WINDOW_BORDER = 8;
-    static final int WINDOW_WIDTH = 2*(WINDOW_BORDER + XBORDER) + 900;
-    static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 2 * YBORDER + 900;
+    public static final int numRows = 11;
+    public static final int numColumns = 11;
+    public static final int YTITLE = 30;
+    public static final int XBORDER = 0;
+    public static final int YBORDER = 0;
+    public static final int WINDOW_BORDER = 8;
+    public static final int boardAlloc=900;
+    public static final int windowAlloc=500;
+    public static final int WINDOW_WIDTH = 2*(WINDOW_BORDER + XBORDER) + boardAlloc+windowAlloc;
+    public static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 2 * YBORDER + 900;
     
     Image image;
     Graphics2D g;
@@ -35,68 +40,79 @@ public final class MonopolyProject extends JFrame implements Runnable {
     
     Image image1=null;
     
-    boolean turnAnimation=false;
-    int xAnim;
-    int yAnim;
+    public static boolean turnAnimation=false;
+    public static int xAnim;
+    public static int yAnim;
 
-    
-    Font font= new Font("Times_New_Roman",Font.BOLD,25);
-    Font font2= new Font("Kabel",Font.BOLD,75);
-    Font font3= new Font("BrushScriptMT",Font.BOLD,30);
-    Image Board=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Board.GIF");
+    public static Font font= new Font("Kabel",Font.BOLD,20);
+    public static Font font2= new Font("Kabel",Font.BOLD,75);
+    public static Font font3= new Font("BrushScriptMT",Font.BOLD,30);
+    public static Image Board=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Board2.JPG");
    
-    int xsize = -1;
-    int ysize = -1;
+    public static int xsize = -1;
+    public static int ysize = -1;
     
-    Time time;
-    boolean startMenu=false;
-    boolean startMenuAnim;
-    int xPosStart;
+    public static Time time;
+    public static boolean startMenu=false;
+    public static boolean startMenuAnim;
+    public static int xPosStart;
     
-    String StartGameS="Start Game";
-    String SettingsS="Settings";
-    String HelpS="Help";
-    String TutorialS="Tutorial";
-    String ExitS="Exit";
+    public static String StartGameS="Start Game";
+    public static String SettingsS="Settings";
+    public static String HelpS="Help";
+    public static String TutorialS="Tutorial";
+    public static String ExitS="Exit";
     
-    int diceRow1=5;
-    int diceColumn1=4;
-    int diceRow2=5;
-    int diceColumn2=6;
-    double sRotation;
-    double sScale;
+    public static int diceRow1=5;
+    public static int diceColumn1=4;
+    public static int diceRow2=5;
+    public static int diceColumn2=6;
+    public static double sRotation;
+    public static double sScale;
+    public static double sDir;
     
-    double mRotation;
-    double mScale;
+    public static double mRotation;
+    public static double mScale;
     
-    int turnCount;
+    public static int turnCount;
     
-    int purchaseRow=6;
-    int purchaseCol=4;
+    public static int purchaseX;
+    public static int purchaseY;
+    public static int purchaseLength;
+    public static int purchaseHeight;
     
-    int timeCount;
+    public static int payX;
+    public static int payY;
+    public static int payLength;
+    public static int payHeight;
     
-    int currentPlayer;
+    public static int timeCount;
     
-    boolean diceRoll;
-    boolean decision;
+    public static int currentPlayer;
     
-    boolean StartGameH;
-    boolean SettingsH;
-    boolean HelpH;
-    boolean TutorialH;
-    boolean ExitH;
+    public static boolean diceRoll;
+    public static boolean decision;
+    public static boolean payRent;
+    public static boolean purchase;
+    
+    public static boolean StartGameH;
+    public static boolean SettingsH;
+    public static boolean HelpH;
+    public static boolean TutorialH;
+    public static boolean ExitH;
+    
+    boolean large,small;
     
     
     
     
-    static boolean gameStart;
+    public static boolean gameStart;
     
-    static Property property[][];
-    static final int numPlayers=4;
-    static Player players[]=new Player[numPlayers];
-    static Dice dice;
-    static Dice dice2;
+    public static Property property[][];
+    public static final int numPlayers=4;
+    public static Player players[]=new Player[numPlayers];
+    public static Dice dice;
+    public static Dice dice2;
     
     public static int timerTick;
     double fps=1.0/FPS;
@@ -123,89 +139,8 @@ public final class MonopolyProject extends JFrame implements Runnable {
                 }
                 
                 if (MouseEvent.BUTTON1 == e.getButton()){
-                    if(!gameStart)
-                    {
-                        if(StartGameH)
-                        {
-//                            gameStart=true;
-//                            startMenu=false;
-//                            StartGameH=false;
-                            startMenuAnim=true;
-                        }
-                        if(ExitH)
-                        {
-                            System.exit(0);
-                        }
-                    }
-                    int numberOfSquaresNeededToMove=0;
-                    int xdelta = getWidth2()/numColumns*2;
-                    int ydelta = getHeight2()/numRows*2;
-                    int xpos = e.getX() - getX(0);
-                    int ypos = e.getY() - getY(0);
-                    int column = xpos/(xdelta/2);
-                    int row = ypos/(ydelta/2);
-                    if(diceRoll)
-                    {
-                        if((diceRow1==row&&diceColumn1==column)||(diceRow2==row&&diceColumn2==column))
-                        {
-                            dice=new Dice();
-                            dice2=new Dice();
-                            numberOfSquaresNeededToMove=Dice.addSides();
-                            while(numberOfSquaresNeededToMove>=1)
-                            {
-
-                                if(players[currentPlayer].getX()<numColumns-1&&players[currentPlayer].getY()==0)
-                                {
-                                    players[currentPlayer].setX(players[currentPlayer].getX()+1);
-                                    numberOfSquaresNeededToMove--;
-                                }
-                                else if(players[currentPlayer].getX()==numColumns-1&&players[currentPlayer].getY()<=numRows-2)
-                                {
-
-                                    players[currentPlayer].setY(players[currentPlayer].getY()+1);
-                                    numberOfSquaresNeededToMove--;
-                                }
-                                else if(players[currentPlayer].getX()>=1&&players[currentPlayer].getY()<=numRows-1)
-                                {
-                                    players[currentPlayer].setX(players[currentPlayer].getX()-1);
-                                    numberOfSquaresNeededToMove--;
-                                }
-                                else if(players[currentPlayer].getX()==0&&players[currentPlayer].getY()>=0)
-                                {
-                                    players[currentPlayer].setY(players[currentPlayer].getY()-1);
-                                    numberOfSquaresNeededToMove--;
-                                }
-                                else
-                                    numberOfSquaresNeededToMove--;
-                            }
-                            diceRoll=false;
-                            decision=true;
-                        }
-                    }
-                    else if(decision)
-                    {
-                        if(purchaseRow==row&&(purchaseCol==column||purchaseCol+1==column||purchaseCol+2==column))
-                        {
-                            if(players[currentPlayer].getMoney()>=property[players[currentPlayer].getY()][players[currentPlayer].getX()].getCost()&&property[players[currentPlayer].getY()][players[currentPlayer].getX()].getThePlayer()==null)
-                            {
-                                    property[players[currentPlayer].getY()][players[currentPlayer].getX()].addPlayer(players[currentPlayer]);
-                                    players[currentPlayer].setMoney(players[currentPlayer].getMoney()-property[players[currentPlayer].getY()][players[currentPlayer].getX()].getCost());
-                            }
-                        }   
-                        players[currentPlayer].setIsTurn(false);
-                        currentPlayer++;
-                        if(currentPlayer>=numPlayers)
-                            currentPlayer=0;
-                        players[currentPlayer].setIsTurn(true);
-                        decision=false;
-                        diceRoll=true;
-                        turnCount++;
-                        xAnim=0;
-                        yAnim=0;
-                        turnAnimation=true;
-                        
-                    }
                     
+                    Logic.LeftClick.Click1(e);
                         
                     
                 }
@@ -225,43 +160,7 @@ public final class MonopolyProject extends JFrame implements Runnable {
       @Override
       public void mouseMoved(MouseEvent e) {
           
-          if(!gameStart)
-          {
-                int xdelta = getWidth2()/numColumns*2;
-                int ydelta = getHeight2()/numRows*2;
-                int xpos = e.getX() - getX(0);
-                int ypos = getYNormal(e.getY() - getY(0));
-                int column = xpos/(xdelta/2);
-                int row = ypos/(ydelta/2);
-
-                if(xpos>getWidth2()/2-XBORDER&&xpos<getWidth2()/2+StartGameS.length()*25
-                &&ypos<453&&ypos>413)
-                    StartGameH=true;
-                else
-                    StartGameH=false;
-                if(xpos>getWidth2()/2-XBORDER&&xpos<getWidth2()/2+SettingsS.length()*25
-                &&ypos<407&&ypos>362)
-                    SettingsH=true;
-                else
-                    SettingsH=false;
-                if(xpos>getWidth2()/2-XBORDER&&xpos<getWidth2()/2+HelpS.length()*25
-                &&ypos<344&&ypos>302)
-                    HelpH=true;
-                else
-                    HelpH=false;
-                if(xpos>getWidth2()/2-XBORDER&&xpos<getWidth2()/2+TutorialS.length()*25
-                &&ypos<283&&ypos>249)
-                    TutorialH=true;
-                else
-                    TutorialH=false;
-                if(xpos>getWidth2()/2-XBORDER&&xpos<getWidth2()/2+ExitS.length()*25
-                &&ypos<233&&ypos>190)
-                    ExitH=true;
-                else
-                    ExitH=false;
-                //System.out.println(getYNormal(e.getY() - getY(0)));
-                g.drawOval(getWidth2()/2, getYNormal(e.getY() - getY(0)), 50, 50);
-          }
+          Logic.MouseMoved.Moved(e);
         
         repaint();
       }
@@ -340,35 +239,33 @@ public final class MonopolyProject extends JFrame implements Runnable {
 
             
             g.setColor(Color.yellow);
-    //horizontal lines
-            for (int zi=1;zi<numRows;zi++)
+            if(gameStart)
             {
+                int menuxpos=boardAlloc+YTITLE;
+                int menuypos=YTITLE+1;
+                int menuLength=windowAlloc;
+                int menuHeight=getHeight2()-2;
                 g.setColor(Color.black);
-                g.drawLine(getX(0) ,getY(0)+zi*getHeight2()/numRows ,
-                getX(getWidth2()) ,getY(0)+zi*getHeight2()/numRows );
+                g.fillRect(menuxpos, menuypos, menuLength+50, menuHeight+50);
+                g.setColor(Color.red);
+                Stroke nice = g.getStroke();
+                g.setStroke(new BasicStroke(20.0f));
+                g.drawRect(menuxpos, menuypos, menuLength, menuHeight);
+                g.setStroke(nice);
             }
-    //vertical lines
-            for (int zi=1;zi<numColumns;zi++)
-            {
-                g.setColor(Color.black);
-                g.drawLine(getX(0)+zi*getWidth2()/numColumns ,getY(0) ,
-                getX(0)+zi*getWidth2()/numColumns,getY(getHeight2())  );
-            }
-
             
-
     //Display the objects of the board
             g.setColor(Color.gray);
             
             //g.fillRect(getX(0)+getWidth2()/numColumns+1, getY(0)+getHeight2()/numRows+1,(getWidth2()*(numColumns-2))/numColumns, (getHeight2()*(numRows-2))/numRows);
-            g.drawImage(Board, XBORDER, YBORDER, getWidth2()+XBORDER, getHeight2()+YBORDER,this);
+            g.drawImage(Board, YTITLE, YTITLE*2, boardAlloc+XBORDER, getHeight2()-YTITLE,this);
             for (int zrow=0;zrow<numRows;zrow++)
             {
                 for (int zcolumn=0;zcolumn<numColumns;zcolumn++)
                 {
                     if(property[zrow][zcolumn]!=null)
                     {
-                        int xpos=getX(0)+zcolumn*getWidth2()/numColumns;
+                        int xpos=getX(0)+zcolumn*boardAlloc/numColumns;
                         int ypos=getY(0)+zrow*getHeight2()/numRows;
                         int length=getWidth2()/numColumns;
                         int height=getHeight2()/numRows;
@@ -381,36 +278,10 @@ public final class MonopolyProject extends JFrame implements Runnable {
                         String text2 = property[zrow][zcolumn].getCost()+"";
                         g.drawString(text2, xpos+length/2, ypos+length); 
 
-//                        if(property[zrow][zcolumn].getThePlayer()!=null)
-//                        {
-//                            text2 = property[zrow][zcolumn].getThePlayer().getName();
-//                            g.drawString(text2, xpos, ypos+height/2); 
-//                        }
-//                        else if(property[zrow][zcolumn].getThePlayer()==null)
-//                        {
-//                            text2 = property[zrow][zcolumn].getName();
-//                            g.drawString(text2, xpos, ypos+height/4); 
-//                        }
-
                     }   
                 }    
             }
-            if(decision)
-                g.setColor(Color.red);
-            else
-            {
-                Color color2 = new Color(Color.red.getRed()/255,Color.red.getGreen()/255,Color.red.getBlue()/255,.3f);
-                g.setColor(color2);
-            }
-            if(decision)
-            {
-                g.fillRect(getX(0)+(purchaseCol)*getWidth2()/numColumns+1, getY(0)+purchaseRow*getHeight2()/numRows, (getWidth2()/numColumns)*3, getHeight2()/numRows);
-
-                g.setFont(new Font("Impact",Font.ITALIC,40));
-                String text2 = "Purchase";
-                g.setColor(Color.black);
-                g.drawString(text2, getX(0)+(purchaseCol)*getWidth2()/numColumns+25, getY(0)+purchaseRow*getHeight2()/numRows+55); 
-            }
+            GUIs.PlayerInfoWindow.drawInfoWindow(g);
             g.setFont(font);
             String text=null;
             if(time.getHours()!=0&&time.getMinutes()!=0)
@@ -422,20 +293,21 @@ public final class MonopolyProject extends JFrame implements Runnable {
             if(text!=null)
                 g.drawString(text,50,60);
 
+            String text2=null;
             for(int index=0;index<numPlayers;index++)
             {
-                int xpos=getX(0)+players[index].getX()*getWidth2()/numColumns+index*10;
-                int ypos=getY(0)+players[index].getY()*getHeight2()/numRows;
+                int xpos=getX(0)+players[index].getX()*boardAlloc/numColumns+index*10;
+                int ypos=getY(0)+players[index].getY()*getHeight2()/numRows-YTITLE;
                 int length=getWidth2()/numColumns*3/4;
                 int height=getHeight2()/numRows*3/4;
                 players[index].draw(g, xpos, ypos, length, height, this);
                 g.setColor(Color.black);
-                String text2 = players[index].getMoney()+"";
+                text2 = players[index].getMoney()+"";
                 g.drawString(text2, xpos+length/2, ypos+length*3/4); 
             }
 
-            dice.draw(g,getX(0)+diceColumn1*getWidth2()/numColumns, getY(0)+diceRow1*getHeight2()/numRows, getWidth2()/numColumns, getHeight2()/numRows,this);
-            dice2.draw(g,getX(0)+diceColumn2*getWidth2()/numColumns, getY(0)+diceRow2*getHeight2()/numRows, getWidth2()/numColumns, getHeight2()/numRows,this);
+            dice.draw(g,getX(0)+diceColumn1*boardAlloc/numColumns, getY(0)+diceRow1*getHeight2()/numRows, boardAlloc/numColumns, getHeight2()/numRows,this);
+            dice2.draw(g,getX(0)+diceColumn2*boardAlloc/numColumns, getY(0)+diceRow2*getHeight2()/numRows, boardAlloc/numColumns, getHeight2()/numRows,this);
         }
         if(turnAnimation)
         {
@@ -454,97 +326,20 @@ public final class MonopolyProject extends JFrame implements Runnable {
         {
             g.setColor(Color.white);
             g.fillRect(0,0,getWidth2()*50,getHeight2()*50);
-            drawSplashScreen(getWidth2()/2,getHeight2()/2,360-sRotation,.1+sScale,.05+sScale);
+            GUIs.SplashScreen.drawSplashScreen(g,getWidth2()/2,getHeight2()/2,360-sRotation,.1+sScale,.05+sScale);
         }
         if(startMenu)
         {
-            drawSplashScreenMenu(getWidth2()/2,getHeight2()*8/12,0,.1+mScale,.05+mScale);
+            GUIs.SplashScreenMenu.drawSplashScreenMenu(g,getWidth2()/2,getHeight2()*8/12,0,.1+mScale,.05+mScale);
         }
         
         
         gOld.drawImage(image, 0, 0, null);
     }
     
-    public void drawSplashScreen(int xpos,int ypos,double rot,double xscale,double yscale)
-    {
-        g.translate(xpos,ypos);
-        g.rotate(rot  * Math.PI/180.0);
-        g.scale( xscale , yscale );
-        
-        
-        g.setColor(Color.red);
-        g.fillRect(-150, -50, 360, 100);
-        g.setColor(Color.black);
-        Stroke nice = g.getStroke();
-        g.setStroke(new BasicStroke(3.0f));
-        g.drawRect(-150, -50, 360, 100);
-        g.setStroke(nice);
-        g.setFont(font2);
-        String red = "Monopoly";
-        nice = g.getStroke();
-        g.setStroke(new BasicStroke(4.0f));
-        g.setColor(Color.black);
-        g.drawString(red, -150,  25);
-        g.setStroke(nice);
-        g.setFont(font2);
-        g.setColor(Color.white);
-        g.drawString(red, -150+3,  25-3);
-        
-        red="War";
-        g.setFont(font3);
-        g.drawString(red, 90,  45);
-        
-        g.scale( 1.0/xscale,1.0/yscale );
-        g.rotate(-rot  * Math.PI/180.0);
-        g.translate(-xpos,-ypos);
-    }
-    public void drawSplashScreenMenu(int xpos,int ypos,double rot,double xscale,double yscale)
-    {
-        g.translate(xpos,ypos);
-        g.rotate(rot  * Math.PI/180.0);
-        g.scale( xscale , yscale );
-        
-        Color black=Color.black;
-        Color selected=Color.yellow;
-        
-        
-        g.setColor(black);
-        String nice=StartGameS;
-        g.setFont(font);
-        if(StartGameH)
-            g.setColor(selected);
-        else
-            g.setColor(black);
-        g.drawString(nice, 0+xPosStart,  (int)(yscale*yscale));
-        nice=SettingsS;
-        if(SettingsH)
-            g.setColor(selected);
-        else
-            g.setColor(black);
-        g.drawString(nice, 0,  (int)(yscale*yscale)*7);
-        nice=HelpS;
-        if(HelpH)
-            g.setColor(selected);
-        else
-            g.setColor(black);
-        g.drawString(nice, 0,  (int)(yscale*yscale)*14);
-        nice=TutorialS;
-        if(TutorialH)
-            g.setColor(selected);
-        else
-            g.setColor(black);
-        g.drawString(nice, 0,  (int)(yscale*yscale)*21);
-        nice=ExitS;
-        if(ExitH)
-            g.setColor(selected);
-        else
-            g.setColor(black);
-        g.drawString(nice, 0,  (int)(yscale*yscale)*28);
-        
-        g.scale( 1.0/xscale,1.0/yscale );
-        g.rotate(-rot  * Math.PI/180.0);
-        g.translate(-xpos,-ypos);
-    }
+    
+    
+    
 ////////////////////////////////////////////////////////////////////////////
 // needed for     implement runnable
     @Override
@@ -590,7 +385,17 @@ public final class MonopolyProject extends JFrame implements Runnable {
         mScale=0;
         turnAnimation=false;
         startMenuAnim=false;
+        purchaseX=getX(0)+(4)+boardAlloc+YTITLE*2;
+        purchaseY=getY(0)+(10)*getHeight2()/numRows-YTITLE/2;
+        purchaseLength=(getWidth2()/numColumns)*2;
+        purchaseHeight=getHeight2()/numRows;
         
+        payX=getX(0)+(4)+boardAlloc+YTITLE*2;
+        payY=getY(0)+(9)*getHeight2()/numRows-YTITLE/2;
+        payLength=(getWidth2()/numColumns)*2;
+        payHeight=getHeight2()/numRows;
+        large=false;
+        small=false;
         
         
     }
@@ -612,18 +417,52 @@ public final class MonopolyProject extends JFrame implements Runnable {
             
         }
         
-        
+        timeCount++;
         if(!gameStart)
         {
-            sScale+=.02;
-            sRotation+=.2;
-            if(sRotation>=20||sScale>=25)
+            if(!small&&(sRotation>=20))
             {
                 startMenu=true;
                 //timeCount++;
-                sScale-=.02;
-                sRotation-=.2;
+                small=true;
+                System.out.println("true");
+                
             }
+            else if(!small)
+            {
+                sScale+=.02;
+                sRotation+=.2;
+            }
+            
+            if((small&&!large))
+            {
+                
+                if(sScale>2.3)
+                {
+                    if(timeCount%15==14)
+                        large=true;
+                }
+                else
+                {
+                    sDir=.005;
+                    sScale+=sDir;
+                }
+            }
+            else if(large)
+            {
+                if(sScale<2.0)
+                {
+                    if(timeCount%30==29)
+                        large=false;
+                }
+                else
+                {
+                    sDir=-.005;
+                    sScale+=sDir;
+                }
+            }
+            
+            
             if(timeCount%120==119)
             {
                 startMenu=true;
@@ -635,11 +474,14 @@ public final class MonopolyProject extends JFrame implements Runnable {
                 if(mRotation>=20||mScale>=15)
                 {
                     startMenu=true;
-                    //timeCount++;
+                    
                     mScale-=.02;
                     mRotation-=.2;
-                    timeCount=0;
+                    
+                    
                 }
+                
+                
             }
             if(startMenuAnim)
             {
@@ -659,11 +501,11 @@ public final class MonopolyProject extends JFrame implements Runnable {
         {
             xAnim+=5;
             yAnim+=5;
-            if(xAnim>getWidth2()/2-40&&yAnim>getHeight2()/2)
+            if(xAnim>boardAlloc/2-40&&yAnim>getHeight2()/2)
             {
                 timeCount++;
             }
-            if(xAnim>getWidth2()/2-35)
+            if(xAnim>boardAlloc/2-35)
                 xAnim-=5;
             if(yAnim>getHeight2()/2)
                 yAnim-=5;
@@ -685,9 +527,9 @@ public final class MonopolyProject extends JFrame implements Runnable {
     {
         for(int index=0;index<numPlayers;index++)
         {
-            for(int index2=0;index2<players[index].getNumProperties();index2++)
+            //for(int index2=0;index2<players[index].getNumProperties();index2++)
             {
-                players[index].getPropertyOwnership();
+                //players[index].getPropertyOwnership(index2);
             }
         }
     }
@@ -707,19 +549,19 @@ public final class MonopolyProject extends JFrame implements Runnable {
         relaxer = null;
     }
 /////////////////////////////////////////////////////////////////////////
-    public int getX(int x) {
+    public static int getX(int x) {
         return (x + XBORDER + WINDOW_BORDER);
     }
-    public int getY(int y) {
+    public static int getY(int y) {
         return (y + YBORDER + YTITLE );
     }
-    public int getYNormal(int y) {
+    public static int getYNormal(int y) {
         return (-y + YBORDER + YTITLE + getHeight2());
     }
-    public int getWidth2() {
+    public static int getWidth2() {
         return (xsize - 2 * (XBORDER + WINDOW_BORDER));
     }
-    public int getHeight2() {
+    public static int getHeight2() {
         return (ysize - 2 * YBORDER - WINDOW_BORDER - YTITLE);
     }
 }
@@ -763,3 +605,146 @@ class sound implements Runnable {
         }
     }
 }
+class PanAndZoom {
+ 
+    PanAndZoomCanvas canvas;
+ 
+    public static void main(String[] args) {
+	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		public void run() {
+		    new PanAndZoom();
+		}
+	    });
+    }
+
+    public PanAndZoom() {
+	JFrame frame = new JFrame();
+	canvas = new PanAndZoomCanvas();
+	PanningHandler panner = new PanningHandler();
+	canvas.addMouseListener(panner);
+	canvas.addMouseMotionListener(panner);
+	canvas.setBorder(BorderFactory.createLineBorder(Color.black));
+
+	// code for handling zooming
+	JSlider zoomSlider = new JSlider(JSlider.HORIZONTAL, 0, 300, 100);
+	zoomSlider.setMajorTickSpacing(25);
+	zoomSlider.setMinorTickSpacing(5);
+	zoomSlider.setPaintTicks(true);
+	zoomSlider.setPaintLabels(true);
+	zoomSlider.addChangeListener(new ScaleHandler());
+
+	// Add the components to the canvas
+	frame.getContentPane().add(zoomSlider, BorderLayout.NORTH);
+	frame.getContentPane().add(canvas, BorderLayout.CENTER);
+	frame.pack();
+	frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	frame.setVisible(true);
+    }
+ 
+    class PanAndZoomCanvas extends JComponent {
+	double translateX;
+	double translateY;
+	double scale;
+ 
+	PanAndZoomCanvas() {
+	    translateX = 0;
+	    translateY = 0;
+	    scale = 1;
+	}
+ 
+	public void paintComponent(Graphics g) {
+	    Graphics2D ourGraphics = (Graphics2D) g;
+	    // save the original transform so that we can restore
+	    // it later
+	    AffineTransform saveTransform = ourGraphics.getTransform();
+
+	    // blank the screen. If we do not call super.paintComponent, then
+	    // we need to blank it ourselves
+	    ourGraphics.setColor(Color.WHITE);
+	    ourGraphics.fillRect(0, 0, getWidth(), getHeight());
+			
+	    // We need to add new transforms to the existing
+	    // transform, rather than creating a new transform from scratch.
+	    // If we create a transform from scratch, we will
+	    // will start from the upper left of a JFrame, 
+	    // rather than from the upper left of our component
+	    AffineTransform at = new AffineTransform(saveTransform);
+
+	    // The zooming transformation. Notice that it will be performed
+	    // after the panning transformation, zooming the panned scene,
+	    // rather than the original scene
+	    at.translate(getWidth()/2, getHeight()/2);
+	    at.scale(scale, scale);
+	    at.translate(-getWidth()/2, -getHeight()/2);
+
+	    // The panning transformation
+	    at.translate(translateX, translateY);
+
+	    ourGraphics.setTransform(at);
+
+	    // draw the objects
+	    ourGraphics.setColor(Color.BLACK);
+	    ourGraphics.drawRect(50, 50, 50, 50);
+	    ourGraphics.fillOval(100, 100, 100, 100);
+	    ourGraphics.drawString("Test Affine Transform", 50, 30);
+
+	    // make sure you restore the original transform or else the drawing
+	    // of borders and other components might be messed up
+	    ourGraphics.setTransform(saveTransform);
+	}
+	public Dimension getPreferredSize() {
+	    return new Dimension(500, 500);
+	}
+    }
+    
+    class PanningHandler implements MouseListener,
+				    MouseMotionListener {
+	int referenceX;
+	int referenceY;
+ 
+	public void mousePressed(MouseEvent e) {
+	    // capture the starting point
+	    referenceX = e.getX();
+	    referenceY = e.getY();
+	}
+	
+	public void mouseDragged(MouseEvent e) {
+	    
+	    // the size of the pan translations 
+	    // are defined by the current mouse location subtracted
+	    // from the reference location
+	    int deltaX = e.getX() - referenceX;
+	    int deltaY = e.getY() - referenceY;
+
+	    // make the reference point be the new mouse point. 
+	    referenceX = e.getX();
+	    referenceY = e.getY();
+	    
+	    canvas.translateX += deltaX;
+	    canvas.translateY += deltaY;
+ 
+	    // schedule a repaint.
+	    canvas.repaint();
+	}
+ 
+	public void mouseClicked(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mouseMoved(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
+	}
+ 
+    class ScaleHandler implements ChangeListener {
+	public void stateChanged(ChangeEvent e) {
+	    JSlider slider = (JSlider)e.getSource();
+	    int zoomPercent = slider.getValue();
+	    // make sure zoom never gets to actual 0, or else the objects will
+	    // disappear and the matrix will be non-invertible.
+	    canvas.scale = Math.max(0.00001, zoomPercent / 100.0);
+	    canvas.repaint();
+	}
+    }
+ }
+
+
+

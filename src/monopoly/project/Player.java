@@ -8,7 +8,6 @@ public class Player
 {
     private String name;
     private int Money;
-    private int numProperties;
     private Image splashImage;
     static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.GIF");
     static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.GIF");
@@ -19,6 +18,7 @@ public class Player
     private int x;
     private int y;
     private int numProperty;
+    private boolean inJail;
     
 
    
@@ -29,19 +29,35 @@ public class Player
         Money=_money;
         splashImage=_Image;
     }
+
+    public boolean getInJail() {
+        return inJail;
+    }
+
+    public void setInJail(boolean inJail) {
+        this.inJail = inJail;
+    }
     
     public void addProperty(Property _property)
     {
-        if(propertyOwnership==null)
+        //if(propertyOwnership.get(numProperty)==null)
         {
             numProperty++;
             propertyOwnership.add(_property);
             _property.addPlayer(this);
         }
     }
+    public void getAllProperties()
+    {
+        for(int index=0;index<numProperty;index++)
+        {
+            System.out.println(getPropertyOwnership(index).getName());
+        }
+    }
 
-    public ArrayList<Property> getPropertyOwnership() {
-        return propertyOwnership;
+    public Property getPropertyOwnership(int _index) 
+    {
+        return propertyOwnership.get(_index);
     }
     
     public void setIsTurn(boolean isTurn) {
@@ -84,10 +100,6 @@ public class Player
         return Money;
     }
 
-    public int getNumProperties() {
-        return numProperties;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -96,10 +108,6 @@ public class Player
         this.Money = Money;
     }
 
-    public void setNumProperties(int numProperties) {
-        this.numProperties = numProperties;
-    }
-    
     public void draw(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
     {
         g.drawImage(getSplashImage(), xpos, ypos, length, height,image);
