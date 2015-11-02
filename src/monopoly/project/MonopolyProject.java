@@ -32,7 +32,6 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static Image image;
     Graphics2D g;
     
-    boolean hello = false;
     static Dimension dim;
 
     public static boolean animateFirstTime = true;
