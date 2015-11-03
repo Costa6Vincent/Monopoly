@@ -4,16 +4,7 @@ package GUIs;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import static monopoly.project.MonopolyProject.decision;
-import static monopoly.project.MonopolyProject.payHeight;
-import static monopoly.project.MonopolyProject.payLength;
-import static monopoly.project.MonopolyProject.payRent;
-import static monopoly.project.MonopolyProject.payX;
-import static monopoly.project.MonopolyProject.payY;
-import static monopoly.project.MonopolyProject.purchaseHeight;
-import static monopoly.project.MonopolyProject.purchaseLength;
-import static monopoly.project.MonopolyProject.purchaseX;
-import static monopoly.project.MonopolyProject.purchaseY;
+
 
 public class PlayerInfoWindow extends monopoly.project.MonopolyProject
 {
@@ -63,6 +54,17 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
                 g.setColor(Color.red);
                 g.drawString(text2, upgradeX, upgradeY+upgradeHeight*3/4); 
             }
+            if(players[currentPlayer].getNumProperty()>=1)
+            {
+                for(int index=0;index<players[currentPlayer].getNumProperty();index++)
+                {
+                    text2=players[currentPlayer].getPropertyOwnership(index).getName();
+                    g.setColor(Color.white);
+                    g.drawString(text2, boardAlloc+50, YTITLE*3+index*30); 
+                }
+            }
+            
+            
 
         }
         else

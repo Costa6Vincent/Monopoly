@@ -53,6 +53,19 @@ public class Player
             _property.addPlayer(this);
         }
     }
+    public void deleteProperty(Property _property)
+    {
+        //if(propertyOwnership.get(numProperty)==null)
+        {
+            numProperty--;
+            propertyOwnership.remove(_property);
+            _property.deletePlayer(this);
+        }
+    }
+
+    public int getNumProperty() {
+        return numProperty;
+    }
     public void getAllProperties()
     {
         for(int index=0;index<numProperty;index++)
@@ -68,6 +81,10 @@ public class Player
     
     public void setIsTurn(boolean isTurn) {
         this.isTurn = isTurn;
+    }
+
+    public void setNumProperty(int numProperty) {
+        this.numProperty = numProperty;
     }
 
     public boolean getIsTurn() {

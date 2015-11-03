@@ -47,6 +47,10 @@ public class Property {
     public void setUpgrade(int upgrade) {
         this.upgrade = upgrade;
     }
+
+    public void setThePlayer(Player thePlayer) {
+        this.thePlayer = thePlayer;
+    }
     public void addUpgrade()
     {
         if(upgrade<4)
@@ -67,6 +71,14 @@ public class Property {
         {
             thePlayer= _player;
             _player.addProperty(this);
+        }
+    }
+    public void deletePlayer(Player _player)
+    {
+        if(thePlayer!=null)
+        {
+            thePlayer= null;
+            _player.deleteProperty(this);
         }
     }
 

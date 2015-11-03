@@ -40,7 +40,6 @@ public class LeftClick extends Mouse implements Runnable
         {
             players[currentPlayer].setInJail(false);
             nextTurn();
-            return;
         }
         int numberOfSquaresNeededToMove=0;
         int xdelta = getWidth2()/numColumns*2;
@@ -96,7 +95,6 @@ public class LeftClick extends Mouse implements Runnable
                     currentPerson.setX(0);
                     currentPerson.setY(10);
                     nextTurn();
-                    return;
                 }
                 if(currentProperty.getThePlayer()==null&&currentProperty.getThePlayer()!=currentPerson)
                 {
@@ -117,11 +115,10 @@ public class LeftClick extends Mouse implements Runnable
                 else
                     purchase=false;
                 
-                if(!currentProperty.getCanPurchase())
-                {
-                    nextTurn();
-                    return;
-                }
+//                if(!currentProperty.getCanPurchase())
+//                {
+//                    nextTurn();
+//                }
                 diceRoll=false;
                 decision=true;
             }
@@ -146,12 +143,26 @@ public class LeftClick extends Mouse implements Runnable
                     nextTurn();
                 }
             }
-            else if(upgrade&&xpos>=upgradeX&&xpos<upgradeX+purchaseLength&&ypos>upgradeY-YTITLE&&ypos<upgradeY+purchaseHeight-YTITLE)
+            if(upgrade&&xpos>=upgradeX&&xpos<upgradeX+purchaseLength&&ypos>upgradeY-YTITLE&&ypos<upgradeY+purchaseHeight-YTITLE)
             {
                 currentProperty.addUpgrade();
                 nextTurn();
             }
-            else if(currentPerson.getMoney()>=currentProperty.getCost()&&currentProperty.getThePlayer()!=null&&currentProperty.getThePlayer()!=currentPerson)
+            if(currentPerson.getNumProperty()>=1)
+            {
+                for(int index=0;index<currentPerson.getNumProperty();index++)
+                {
+                    if(xpos>=boardAlloc+50&&xpos<=boardAlloc+100&&ypos>YTITLE*3+index*30&&ypos<(YTITLE*3*(index))+index*30)
+                    {
+                        currentPerson.setMoney(currentPerson.getMoney()+currentPerson.getPropertyOwnership(index).getCost());
+                        currentPerson.getPropertyOwnership(index).setThePlayer(null);
+                        currentPerson.setNumProperty(currentPerson.getNumProperty()-1);
+                        nextTurn();
+                    }
+                    //g.drawString(text2, boardAlloc, YTITLE*3+index*30); 
+                }
+            }
+            if(currentPerson.getMoney()>=currentProperty.getCost()&&currentProperty.getThePlayer()!=null&&currentProperty.getThePlayer()!=currentPerson)
             {
                 Player playerOwner=currentProperty.getThePlayer();
                 playerOwner.setMoney(playerOwner.getMoney()+currentProperty.getRent());
@@ -175,5 +186,6 @@ public class LeftClick extends Mouse implements Runnable
         xAnim=0;
         yAnim=0;
         turnAnimation=true;
+        return;
     }
 }
