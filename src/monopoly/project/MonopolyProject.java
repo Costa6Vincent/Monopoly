@@ -11,10 +11,14 @@ import java.io.File;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Locale;
 import javax.sound.sampled.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import network.ClientHandler;
+import network.ServerHandler;
 
 public class MonopolyProject extends JFrame implements Runnable {
     
@@ -111,12 +115,8 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static boolean HelpH;
     public static boolean TutorialH;
     public static boolean ExitH;
-    
+    public static String ipAddress = new String();
     boolean large,small;
-    
-    
-    
-    
     public static boolean gameStart;
     
     public static Property property[][];
@@ -128,6 +128,15 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static int timerTick;
     double fps=1.0/FPS;
     static MonopolyProject frame1;
+    
+    public static boolean gameStarted = false;
+    public static boolean myTurn;
+    public static int serverValue = 0;
+    public static int clientValue = 0;
+    public static boolean isConnecting = false;
+    public static boolean isClient;
+    public static boolean isServer;
+    
     public static void main(String[] args) {
 
         frame1 = new MonopolyProject();
@@ -180,18 +189,172 @@ public class MonopolyProject extends JFrame implements Runnable {
         addKeyListener(new KeyAdapter() {
 
             @Override
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_UP == e.getKeyCode()){
-                    
-                }
-                if(KeyEvent.VK_SPACE==e.getKeyCode()){
-                    
-                }
-                if(KeyEvent.VK_Q==e.getKeyCode())
+            public void keyPressed(KeyEvent e) {   
+                if (myTurn && gameStarted && e.getKeyCode() == KeyEvent.VK_1)
                 {
-                    
+				if (isClient)
+                                {
+                                    System.out.println("sending from client");
+                                    clientValue++;
+					ClientHandler.sendPieceMove(clientValue);
+                                }
+                                else if(isServer)
+                                {
+                                    System.out.println("sending from server");
+                                    serverValue++;
+					ServerHandler.sendPieceMove(serverValue);
+                                }			                    
                 }
-                repaint();
+                else if (myTurn && gameStarted && e.getKeyCode() == KeyEvent.VK_2)
+                {
+			if (isClient)
+                                {
+                                    System.out.println("sending from client");
+                                    clientValue+=2;
+					ClientHandler.sendPieceMove(clientValue);
+                                }
+				else if(isServer)
+                                {
+                                    System.out.println("sending from server");
+                                    serverValue+=2;
+					ServerHandler.sendPieceMove(serverValue);
+                                }	
+			                    
+                }                
+                else if (e.getKeyCode() == KeyEvent.VK_S)
+                {
+                    if (!isConnecting)
+                    {
+                        try
+                        {
+                    
+                            isConnecting = true;
+                            System.out.println("is connecting true");
+                            ServerHandler.recieveConnect(5657);
+                            System.out.println("after recieveConnect");
+                            if (ServerHandler.connected)
+                            {
+                                isClient = false;
+                                isServer = true;
+                                myTurn = false;
+                                gameStarted = true;
+                                isConnecting = false;
+                            }
+                        }
+                        catch (IOException ex)
+                        {
+                            System.out.println("Cannot host server: " + ex.getMessage());
+                            isConnecting = false;
+                        }                        
+                    }
+                }
+                else if (e.getKeyCode() == KeyEvent.VK_C)
+                {
+                    if (!isConnecting)
+                    {
+                    
+                            try
+                            {
+                   
+                                isConnecting = true;
+                                ClientHandler.connect(ipAddress, 5657);
+                                if (ClientHandler.connected)
+                                {
+                                    isClient = true;
+                                    myTurn = true;
+                                    gameStarted = true;
+                                    isConnecting = false;
+                                }
+                            }
+                            catch (IOException ex)
+                            {
+                                System.out.println("Cannot join server: " + ex.getMessage());
+                                isConnecting = false;
+                            }                    
+                    }
+                }                
+                else
+                {
+                    if (!gameStarted && ipAddress.length() <= 13)
+                    {
+                        if (e.getKeyCode() == KeyEvent.VK_0)
+                        {
+                            ipAddress += "0";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_1)
+                        {
+                            ipAddress += "1";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_2)
+                        {
+                            ipAddress += "2";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_3)
+                        {
+                            ipAddress += "3";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_4)
+                        {
+                            ipAddress += "4";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_5)
+                        {
+                            ipAddress += "=5";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_6)
+                        {
+                            ipAddress += "6";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_7)
+                        {
+                            ipAddress += "7";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_8)
+                        {
+                            ipAddress += "8";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_9)
+                        {
+                            ipAddress += "9";
+                        }
+                        else if (e.getKeyCode() == KeyEvent.VK_PERIOD)
+                        {
+                            ipAddress += ".";
+                        }
+                    }
+                    
+                    if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+                    {
+                        if(ipAddress.length()>0)
+                            ipAddress = ipAddress.substring(0, ipAddress.length()-1);
+                    }
+                }
+                
+                
+                
+                
+                if (gameStarted || isConnecting)
+                {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !isConnecting)
+                    {
+                        if (gameStarted)
+
+                            if (isClient)
+                            {
+                                ClientHandler.sendDisconnect();
+                                ClientHandler.disconnect();
+                            }
+                            else
+                            {
+                                ServerHandler.sendDisconnect();
+                                ServerHandler.disconnect();
+                            }
+                        gameStarted = false;
+                        reset();
+                    }
+                }
+                
+
             }
         });
         init();
@@ -348,6 +511,54 @@ public class MonopolyProject extends JFrame implements Runnable {
             {
                 GUIs.SplashScreenMenu.drawSplashScreenMenu(g,getWidth2()/2,getHeight2()*8/12,0,.1+mScale,.05+mScale);
             }
+            
+//add or modify.   
+        if (!gameStarted)
+        {
+            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+            g.setColor(Color.black);
+            g.drawString("Not Connected",100,150);
+            
+        }
+        else if (isClient)
+        {
+            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+            g.setColor(Color.black);
+            g.drawString("The Client",100,150);
+        }
+        else
+        {
+            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+            g.setColor(Color.black);
+            g.drawString("The Server",100,150);
+        }            
+
+
+        {
+            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+            g.setColor(Color.black);
+            g.drawString("Client value " + clientValue,100,200);
+        }
+
+        {
+            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+            g.setColor(Color.black);
+            g.drawString("Server value " + serverValue,100,300);
+            
+        }
+        
+            try
+            {
+                g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+                g.setColor(Color.black);
+                g.drawString("Your IP address: " + InetAddress.getLocalHost().getHostAddress(), getX(10), getY(20));
+                g.drawString("Enter IP address: " + ipAddress, getX(10), getY(60));
+            }
+            catch (UnknownHostException e)
+            {
+                e.printStackTrace();
+            }
+            
         gOld.drawImage(image, 0, 0, null);
         
     }
@@ -369,6 +580,25 @@ public class MonopolyProject extends JFrame implements Runnable {
                 Thread.sleep(miliseconds);
             } catch (InterruptedException e) {
             }
+        }
+    }
+    
+        /**
+     * Updates state of game
+     */
+    public void update()
+    {
+
+        if (animateFirstTime)
+        {
+            animateFirstTime = false;
+            if (xsize != getSize().width || ysize != getSize().height)
+            {
+                xsize = getSize().width;
+                ysize = getSize().height;
+            }
+
+            reset();
         }
     }
 /////////////////////////////////////////////////////////////////////////
