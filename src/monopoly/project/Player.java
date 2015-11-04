@@ -138,7 +138,7 @@ public class Player
     {
         g.drawImage(getOnBoardImage(), xpos, ypos, length, height,image);
     }
-    public void drawonWindow(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
+    public void drawonWindow(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  )
     {
         g.drawImage(getSplashImage(), xpos, ypos, length, height,image);
     }

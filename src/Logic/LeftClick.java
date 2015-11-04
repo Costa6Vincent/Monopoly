@@ -105,6 +105,7 @@ public class LeftClick extends Mouse implements Runnable
                 if(currentProperty.getThePlayer()==currentPerson)
                 {
                     upgrade=true;
+                    payRent=false;
                 }
                 else
                     upgrade=false;
@@ -138,6 +139,10 @@ public class LeftClick extends Mouse implements Runnable
                     currentPerson.getAllProperties();
                     nextTurn();
                 }
+                
+            }
+            if(!payRent)
+            {
                 if(xpos>=endTurnX&&xpos<endTurnX+purchaseLength&&ypos>endTurnY-YTITLE&&ypos<endTurnY+purchaseHeight-YTITLE)
                 {
                     nextTurn();

@@ -11,7 +11,6 @@ import java.io.File;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.util.Locale;
 import javax.sound.sampled.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -51,6 +50,8 @@ public class MonopolyProject extends JFrame implements Runnable {
    
     public static int xsize = -1;
     public static int ysize = -1;
+    
+    int numClicks=0;
     
     public static Time time;
     public static boolean startMenu=false;
@@ -144,13 +145,18 @@ public class MonopolyProject extends JFrame implements Runnable {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+
                 if (MouseEvent.BUTTON3 == e.getButton()){
                     reset();
+                    numClicks++;
+                    System.err.println("Numclicks: "+numClicks);
                 }
                 
                 if (MouseEvent.BUTTON1 == e.getButton()){
                     
                     Logic.LeftClick.Click1(e);
+                    numClicks++;
+                    System.err.println("Numclicks: "+numClicks);
                         
                    
                 }
@@ -319,11 +325,19 @@ public class MonopolyProject extends JFrame implements Runnable {
                 g.setColor(Color.black);
                 text2 = players[index].getMoney()+"";
                 g.drawString(text2, xpos+length/2, ypos+length*3/4); 
+                if(index==currentPlayer)
+                {
+                    g.setColor(Color.red);
+                    g.drawOval(xpos-length/2,ypos-height/2,length*2,height*2);
+                }
+                
             }
 
             dice.draw(g,getX(0)+diceColumn1*boardAlloc/numColumns, getY(0)+diceRow1*getHeight2()/numRows, boardAlloc/numColumns, getHeight2()/numRows,this);
             dice2.draw(g,getX(0)+diceColumn2*boardAlloc/numColumns, getY(0)+diceRow2*getHeight2()/numRows, boardAlloc/numColumns, getHeight2()/numRows,this);
         }
+        
+        
         if(turnAnimation)
         {
             for(int index=0;index<numPlayers;index++)
