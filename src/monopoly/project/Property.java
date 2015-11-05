@@ -23,6 +23,7 @@ public class Property {
     private boolean canPurchase;
     private boolean isJail;
     private int upgrade;
+    private int defense;
 
     public boolean getCanPurchase() {
         return canPurchase;
@@ -42,6 +43,7 @@ public class Property {
         canPurchase=true;
         isJail=false;
         upgrade=0; 
+        defense=50;
     }
 
     public void setUpgrade(int upgrade) {
@@ -54,7 +56,18 @@ public class Property {
     public void addUpgrade()
     {
         if(upgrade<4)
+        {
             upgrade++;
+            defense+=100;
+        }
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public int getDefense() {
+        return defense;
     }
 
     public int getUpgrade() {

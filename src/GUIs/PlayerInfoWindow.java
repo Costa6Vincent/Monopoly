@@ -63,6 +63,14 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
                 g.setColor(Color.red);
                 g.drawString(text2, upgradeX, upgradeY+upgradeHeight*3/4); 
             }
+            if(attack)
+            {
+                g.setColor(Color.white);
+                g.fillRect(attackX, attackY, attackLength, attackHeight);
+                text2 = "Attack!";
+                g.setColor(Color.red);
+                g.drawString(text2, attackX, attackY+attackHeight*3/4); 
+            }
             
             
             
@@ -113,7 +121,13 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
                 g.drawString(text2, boardAlloc+50, windowAlloc/2+((40+size)*(index+1))); 
             }
         }
-        
+        if(players[currentPlayer].getTheArmy()!=null)
+        {
+            g.setFont(new Font("Impact",Font.ITALIC,40));
+            g.setColor(Color.red);
+            text2=""+players[currentPlayer].getTheArmy().getCurrentArmyPower();
+            g.drawString(text2, boardAlloc+windowAlloc/3+size+20,150); 
+        }
         
         
     }

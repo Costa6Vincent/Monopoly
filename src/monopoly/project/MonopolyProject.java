@@ -97,6 +97,11 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static int upgradeLength;
     public static int upgradeHeight;
     
+    public static int attackX;
+    public static int attackY;
+    public static int attackLength;
+    public static int attackHeight;
+    
     public static int timeCount;
     
     public static int currentPlayer;
@@ -106,6 +111,7 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static boolean payRent;
     public static boolean purchase;
     public static boolean upgrade;
+    public static boolean attack;
     
     public static boolean StartGameH;
     public static boolean SettingsH;
@@ -123,6 +129,7 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static Property property[][];
     public static final int numPlayers=4;
     public static Player players[]=new Player[numPlayers];
+    public static Army army[]=new Army[numPlayers];
     public static Dice dice;
     public static Dice dice2;
     
@@ -403,6 +410,7 @@ public class MonopolyProject extends JFrame implements Runnable {
         
         Property.InitializeDataBase();
         Player.InitializeDataBase2();
+        Army.InitializeDataBase();
         for(int index=0;index<numPlayers;index++)
         {
             players[index].setX(numColumns-1);
@@ -445,6 +453,11 @@ public class MonopolyProject extends JFrame implements Runnable {
         upgradeY=getY(0)+(7)*getHeight2()/numRows-YTITLE/2;
         upgradeLength=(getWidth2()/numColumns)*2;
         upgradeHeight=getHeight2()/numRows;
+        
+        attackX=getX(0)+(4)+boardAlloc+YTITLE*2;
+        attackY=getY(0)+(6)*getHeight2()/numRows-YTITLE/2;
+        attackLength=(getWidth2()/numColumns)*2;
+        attackHeight=getHeight2()/numRows;
         
         large=false;
         small=false;

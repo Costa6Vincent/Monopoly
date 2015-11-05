@@ -24,6 +24,7 @@ public class Player
     private int y;
     private int numProperty;
     private boolean inJail;
+    private Army theArmy;
     
 
    
@@ -55,11 +56,33 @@ public class Player
     }
     public void deleteProperty(Property _property)
     {
-        //if(propertyOwnership.get(numProperty)==null)
+        //if(propertyOwnership.get(numProperty)!=null)
         {
             numProperty--;
             propertyOwnership.remove(_property);
             _property.deletePlayer(this);
+        }
+    }
+    public void addArmy(Army _army)
+    {
+
+        theArmy=_army;
+        _army.addPlayer(this);
+    }
+
+    public void setTheArmy(Army _theArmy) {
+        theArmy = _theArmy;
+    }
+
+    public Army getTheArmy() {
+        return theArmy;
+    }
+    public void deleteArmy(Army _army)
+    {
+        if(propertyOwnership.get(numProperty)!=null)
+        {
+            theArmy=null;
+            _army.deletePlayer(this);
         }
     }
 
@@ -145,10 +168,11 @@ public class Player
     
     public static void InitializeDataBase2()
     {
-        players[0]=new Player("Player1",500,0,player1,p1onBoard);
-        players[1]=new Player("Player2",500,0,player2,p2onBoard);
-        players[2]=new Player("Player3",500,0,player3,p3onBoard);
-        players[3]=new Player("Player4",500,0,player4,p4onBoard);
+        players[0]=new Player("Player1",5000,0,player1,p1onBoard);
+        
+        players[1]=new Player("Player2",5000,0,player2,p2onBoard);
+        players[2]=new Player("Player3",5000,0,player3,p3onBoard);
+        players[3]=new Player("Player4",5000,0,player4,p4onBoard);
     }
 
    

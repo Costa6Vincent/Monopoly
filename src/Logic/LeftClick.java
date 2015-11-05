@@ -5,9 +5,7 @@
  */
 package Logic;
 
-import java.awt.Desktop;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import monopoly.project.*;
 
 
@@ -101,7 +99,10 @@ public class LeftClick extends Mouse implements Runnable
                     payRent=false;
                 }
                 else
+                {
                     payRent=true;
+                    attack=true;
+                }
                 if(currentProperty.getThePlayer()==currentPerson)
                 {
                     upgrade=true;
@@ -143,7 +144,7 @@ public class LeftClick extends Mouse implements Runnable
             }
             if(!payRent)
             {
-                if(xpos>=endTurnX&&xpos<endTurnX+purchaseLength&&ypos>endTurnY-YTITLE&&ypos<endTurnY+purchaseHeight-YTITLE)
+                if(xpos>=endTurnX&&xpos<endTurnX+endTurnLength&&ypos>endTurnY-YTITLE&&ypos<endTurnY+endTurnHeight-YTITLE)
                 {
                     nextTurn();
                 }
@@ -169,11 +170,27 @@ public class LeftClick extends Mouse implements Runnable
             }
             if(currentPerson.getMoney()>=currentProperty.getCost()&&currentProperty.getThePlayer()!=null&&currentProperty.getThePlayer()!=currentPerson)
             {
-                Player playerOwner=currentProperty.getThePlayer();
-                playerOwner.setMoney(playerOwner.getMoney()+currentProperty.getRent());
-                currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getRent());
-                nextTurn();
+                if(payRent&&xpos>=payX&&xpos<payX+attackLength&&ypos>payY-YTITLE&&ypos<payY+payHeight-YTITLE)
+                {
+                    Player playerOwner=currentProperty.getThePlayer();
+                    playerOwner.setMoney(playerOwner.getMoney()+currentProperty.getRent());
+                    currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getRent());
+                    nextTurn();
+                }
             }
+            if(attack&&xpos>=attackX&&xpos<attackX+attackLength&&ypos>attackY-YTITLE&&ypos<attackY+attackHeight-YTITLE)
+            {
+              if(currentPerson.getTheArmy()!=null)
+              {
+                currentPerson.getTheArmy().determineWin(currentProperty.getDefense());
+                nextTurn();
+              }
+            }
+//            for(int index=0;index<players[currentPlayer].getNumProperty();index++)
+//            {
+//                if(xpos>&&xpos< +&&ypos>&&ypos< +)
+//                    players[currentPlayer].deleteProperty(players[currentPlayer].getPropertyOwnership(players[currentPlayer].getNumProperty()-index));
+//            }
 
 
         }
