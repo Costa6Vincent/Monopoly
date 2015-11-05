@@ -102,6 +102,11 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static int attackLength;
     public static int attackHeight;
     
+    public static int upgradeArmyX;
+    public static int upgradeArmyY;
+    public static int upgradeArmyLength;
+    public static int upgradeArmyHeight;
+    
     public static int timeCount;
     
     public static int currentPlayer;
@@ -112,6 +117,7 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static boolean purchase;
     public static boolean upgrade;
     public static boolean attack;
+    public static boolean upgradeArmy;
     
     public static boolean StartGameH;
     public static boolean SettingsH;
@@ -435,29 +441,34 @@ public class MonopolyProject extends JFrame implements Runnable {
         
         
         purchaseX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        purchaseY=getY(0)+(10)*getHeight2()/numRows-YTITLE/2;
+        purchaseY=getY(0)+(750)+getHeight2()/numRows-YTITLE/2;
         purchaseLength=(getWidth2()/numColumns)*2;
-        purchaseHeight=getHeight2()/numRows;
-        
-        payX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        payY=getY(0)+(8)*getHeight2()/numRows-YTITLE/2;
-        payLength=(getWidth2()/numColumns)*2;
-        payHeight=getHeight2()/numRows;
+        purchaseHeight=(getHeight2()/numRows)/2;
         
         endTurnX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        endTurnY=getY(0)+(9)*getHeight2()/numRows-YTITLE/2;
+        endTurnY=getY(0)+(750-purchaseHeight-2)+getHeight2()/numRows-YTITLE/2;
         endTurnLength=(getWidth2()/numColumns)*2;
-        endTurnHeight=getHeight2()/numRows;
+        endTurnHeight=(getHeight2()/numRows)/2;
+        
+        payX=getX(0)+(4)+boardAlloc+YTITLE*2;
+        payY=getY(0)+(750-purchaseHeight-2-endTurnHeight)+getHeight2()/numRows-YTITLE/2;
+        payLength=(getWidth2()/numColumns)*2;
+        payHeight=(getHeight2()/numRows)/2;
         
         upgradeX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        upgradeY=getY(0)+(7)*getHeight2()/numRows-YTITLE/2;
+        upgradeY=getY(0)+(750-purchaseHeight-2-endTurnHeight-payHeight)+getHeight2()/numRows-YTITLE/2;
         upgradeLength=(getWidth2()/numColumns)*2;
-        upgradeHeight=getHeight2()/numRows;
+        upgradeHeight=(getHeight2()/numRows)/2;
         
         attackX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        attackY=getY(0)+(6)*getHeight2()/numRows-YTITLE/2;
+        attackY=getY(0)+(750-purchaseHeight-2-endTurnHeight-2-payHeight-2)+getHeight2()/numRows-YTITLE/2;
         attackLength=(getWidth2()/numColumns)*2;
-        attackHeight=getHeight2()/numRows;
+        attackHeight=(getHeight2()/numRows)/2;
+        
+        upgradeArmyX=getX(0)+(4)+boardAlloc+YTITLE*2;
+        upgradeArmyY=getY(0)+(750-purchaseHeight-2-endTurnHeight-2-payHeight-2-attackHeight-2)+getHeight2()/numRows-YTITLE/2;
+        upgradeArmyLength=(getWidth2()/numColumns)*2;
+        upgradeArmyHeight=(getHeight2()/numRows)/2;
         
         large=false;
         small=false;

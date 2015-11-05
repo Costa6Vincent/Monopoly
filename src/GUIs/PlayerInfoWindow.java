@@ -19,7 +19,7 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
             Color color2 = new Color(Color.red.getRed()/255,Color.red.getGreen()/255,Color.red.getBlue()/255,.3f);
             g.setColor(color2);
         }
-        g.setFont(new Font("Impact",Font.ITALIC,40));
+        g.setFont(new Font("Impact",Font.ITALIC,30));
         String text2 = null;
         if(decision)
         {
@@ -71,7 +71,14 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
                 g.setColor(Color.red);
                 g.drawString(text2, attackX, attackY+attackHeight*3/4); 
             }
-            
+            if(upgradeArmy)
+            {
+                g.setColor(Color.white);
+                g.fillRect(upgradeArmyX, upgradeArmyY, upgradeArmyLength, upgradeArmyHeight);
+                text2 = "Upgrade Army!";
+                g.setColor(Color.red);
+                g.drawString(text2, upgradeArmyX, upgradeArmyY+upgradeArmyHeight*3/4); 
+            }
             
             
 
@@ -125,8 +132,15 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
         {
             g.setFont(new Font("Impact",Font.ITALIC,40));
             g.setColor(Color.red);
-            text2=""+players[currentPlayer].getTheArmy().getCurrentArmyPower();
+            text2="Army Power: "+players[currentPlayer].getTheArmy().getCurrentArmyPower();
             g.drawString(text2, boardAlloc+windowAlloc/3+size+20,150); 
+        }
+        if(property[players[currentPlayer].getY()][players[currentPlayer].getX()]!=null)
+        {
+            g.setFont(new Font("Impact",Font.ITALIC,40));
+            g.setColor(Color.red);
+            text2="Property Power: "+property[players[currentPlayer].getY()][players[currentPlayer].getX()].getDefense();
+            g.drawString(text2, boardAlloc+windowAlloc/3+size+20,200); 
         }
         
         

@@ -10,10 +10,10 @@ public class Player
     private int Money;
     private Image splashImage;
     private Image onBoardImage;
-    static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.GIF");
-    static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.GIF");
-    static private Image player3=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player3.GIF");
-    static private Image player4=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player4.GIF");
+    static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.PNG");
+    static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.PNG");
+    static private Image player3=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player3.PNG");
+    static private Image player4=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player4.PNG");
     static private Image p1onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p1onBoard.PNG");;
     static private Image p2onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p2onBoard.PNG");;
     static private Image p3onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p3onBoard.PNG");;

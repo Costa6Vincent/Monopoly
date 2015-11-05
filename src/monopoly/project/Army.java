@@ -85,10 +85,12 @@ public class Army{
         if(_propertyPower>getCurrentArmyPower())
         {
             ArmyDestroyed();
+            System.out.println("army lost!");
         }
         else
         {
             ArmyWin();
+            System.out.println("army won!");
         }
     }
         
@@ -114,16 +116,16 @@ public class Army{
     
     public static void InitializeDataBase()
     {
-        army[0]=new Army(50,players[0],"Army 1");
+        army[0]=new Army(100,players[0],"Army 1");
         players[0].addArmy(army[0]);
         
-        army[1]=new Army(50,players[1],"Army 2");
+        army[1]=new Army(100,players[1],"Army 2");
         players[1].addArmy(army[1]);
         
-        army[2]=new Army(50,players[2],"Army 3");
+        army[2]=new Army(100,players[2],"Army 3");
         players[2].addArmy(army[2]);
         
-        army[3]=new Army(50,players[3],"Army 4");
+        army[3]=new Army(100,players[3],"Army 4");
         players[3].addArmy(army[3]);
     }
     
