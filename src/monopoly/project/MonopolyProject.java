@@ -118,13 +118,16 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static boolean upgrade;
     public static boolean attack;
     public static boolean upgradeArmy;
+    public static boolean canUpgrade;
     
     public static boolean StartGameH;
     public static boolean SettingsH;
     public static boolean HelpH;
     public static boolean TutorialH;
     public static boolean ExitH;
-    
+    public static boolean StringMove;
+    public static boolean drawGoodCard;
+    public static boolean drawBadCard;
     boolean large,small;
     
     
@@ -149,6 +152,7 @@ public class MonopolyProject extends JFrame implements Runnable {
         frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame1.setLocationRelativeTo(null);
+        //frame1.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         frame1.setVisible(true);
     }
 
@@ -345,6 +349,7 @@ public class MonopolyProject extends JFrame implements Runnable {
                 }
                 
             }
+            
 
             dice.draw(g,getX(0)+diceColumn1*boardAlloc/numColumns, getY(0)+diceRow1*getHeight2()/numRows, boardAlloc/numColumns, getHeight2()/numRows,this);
             dice2.draw(g,getX(0)+diceColumn2*boardAlloc/numColumns, getY(0)+diceRow2*getHeight2()/numRows, boardAlloc/numColumns, getHeight2()/numRows,this);
@@ -439,6 +444,8 @@ public class MonopolyProject extends JFrame implements Runnable {
         turnAnimation=false;
         startMenuAnim=false;
         
+        PanAndZoom pen = new PanAndZoom();
+        
         
         purchaseX=getX(0)+(4)+boardAlloc+YTITLE*2;
         purchaseY=getY(0)+(750)+getHeight2()/numRows-YTITLE/2;
@@ -472,6 +479,8 @@ public class MonopolyProject extends JFrame implements Runnable {
         
         large=false;
         small=false;
+        
+        canUpgrade=true;
         
         
     }

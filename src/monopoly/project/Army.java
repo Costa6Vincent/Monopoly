@@ -86,11 +86,14 @@ public class Army{
         {
             ArmyDestroyed();
             System.out.println("army lost!");
+            MonopolyProject.StringMove=true;
+           // GUIs.Event.=true;
         }
         else
         {
             ArmyWin();
             System.out.println("army won!");
+            MonopolyProject.StringMove=true;
         }
     }
         

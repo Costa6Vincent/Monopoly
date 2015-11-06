@@ -122,6 +122,29 @@ public class LeftClick extends Mouse implements Runnable
 //                {
 //                    nextTurn();
 //                }
+                if(currentPerson.getMoney()>=250&&canUpgrade)
+                {
+                    upgradeArmy=true;
+                }
+                else
+                {
+                    upgradeArmy=false;
+                    canUpgrade=false;
+                }
+                if(currentProperty.getName().contentEquals("Good"))
+                {
+                    drawGoodCard=true;
+                    purchase=false;
+                    attack=false;
+                    payRent=false;
+                }
+                if(currentProperty.getName().contentEquals("Bad"))
+                {
+                    drawBadCard=true;
+                    purchase=false;
+                    attack=false;
+                    payRent=false;
+                }
                 diceRoll=false;
                 decision=true;
             }
@@ -131,13 +154,14 @@ public class LeftClick extends Mouse implements Runnable
             
             Property currentProperty=property[players[currentPlayer].getY()][players[currentPlayer].getX()];
             Player currentPerson=players[currentPlayer];
-            if(currentPerson.getMoney()>=250)
+            if(currentPerson.getMoney()>=250&&canUpgrade)
             {
                 upgradeArmy=true;
             }
             else
             {
                 upgradeArmy=false;
+                canUpgrade=false;
             }
             if(currentProperty.getThePlayer()==null&&currentPerson.getMoney()>=currentProperty.getCost()&&currentProperty.getCanPurchase())
             {
@@ -192,13 +216,13 @@ public class LeftClick extends Mouse implements Runnable
               if(currentPerson.getTheArmy()!=null)
               {
                 currentPerson.getTheArmy().determineWin(currentProperty.getDefense());
-                nextTurn();
               }
             }
-            if(upgradeArmy&&xpos>=upgradeArmyX&&xpos<upgradeArmyX+upgradeArmyLength&&ypos>upgradeArmyY-YTITLE&&ypos<upgradeArmyY+upgradeArmyHeight-YTITLE)
+            if(canUpgrade&&upgradeArmy&&xpos>=upgradeArmyX&&xpos<upgradeArmyX+upgradeArmyLength&&ypos>upgradeArmyY-YTITLE&&ypos<upgradeArmyY+upgradeArmyHeight-YTITLE)
             {
               currentPerson.setMoney(currentPerson.getMoney()-250);
               currentPerson.getTheArmy().setCurrentArmyPower(currentPerson.getTheArmy().getCurrentArmyPower()+250);
+              canUpgrade=false;
             }
 //            for(int index=0;index<players[currentPlayer].getNumProperty();index++)
 //            {
@@ -222,6 +246,7 @@ public class LeftClick extends Mouse implements Runnable
         xAnim=0;
         yAnim=0;
         turnAnimation=true;
+        canUpgrade=true;
         return;
     }
 }

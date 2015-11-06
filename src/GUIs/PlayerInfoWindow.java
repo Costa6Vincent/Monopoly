@@ -71,7 +71,8 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
                 g.setColor(Color.red);
                 g.drawString(text2, attackX, attackY+attackHeight*3/4); 
             }
-            if(upgradeArmy)
+            
+            if(upgradeArmy&&canUpgrade)
             {
                 g.setColor(Color.white);
                 g.fillRect(upgradeArmyX, upgradeArmyY, upgradeArmyLength, upgradeArmyHeight);
