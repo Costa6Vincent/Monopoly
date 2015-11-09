@@ -33,6 +33,11 @@ public class LeftClick extends Mouse implements Runnable
             {
                 System.exit(0);
             }
+            if(AIH)
+            {
+                AIOn=true;
+                startMenuAnim=true;
+            }
         }
         if(players[currentPlayer].getInJail())
         {
@@ -46,110 +51,12 @@ public class LeftClick extends Mouse implements Runnable
         int ypos = e.getY() - getY(0);
         int column = xpos/(xdelta/2);
         int row = ypos/(ydelta/2);
-        if(diceRoll)
+        if((diceRow1==row&&diceColumn1==column)||(diceRow2==row&&diceColumn2==column))
         {
-            if((diceRow1==row&&diceColumn1==column)||(diceRow2==row&&diceColumn2==column))
-            {
-                dice=new Dice();
-                dice2=new Dice();
-                numberOfSquaresNeededToMove=Dice.addSides();
-                Player currentPerson=players[currentPlayer];
-                while(numberOfSquaresNeededToMove>=1)
-                {
-                    Property currentProperty=property[players[currentPlayer].getY()][players[currentPlayer].getX()];
-                    if(players[currentPlayer].getX()<numColumns-1&&players[currentPlayer].getY()==0)
-                    {
-                        players[currentPlayer].setX(players[currentPlayer].getX()+1);
-                        numberOfSquaresNeededToMove--;
-                    }
-                    else if(players[currentPlayer].getX()==numColumns-1&&players[currentPlayer].getY()<=numRows-2)
-                    {
-                        players[currentPlayer].setY(players[currentPlayer].getY()+1);
-                        numberOfSquaresNeededToMove--;
-                    }
-                    else if(players[currentPlayer].getX()>=1&&players[currentPlayer].getY()<=numRows-1)
-                    {
-                        players[currentPlayer].setX(players[currentPlayer].getX()-1);
-                        numberOfSquaresNeededToMove--;
-                    }
-                    else if(players[currentPlayer].getX()==0&&players[currentPlayer].getY()>=0)
-                    {
-                        players[currentPlayer].setY(players[currentPlayer].getY()-1);
-                        numberOfSquaresNeededToMove--;
-                    }
-                    else
-                        numberOfSquaresNeededToMove--;
-                    if(players[currentPlayer].getY()==numRows-1&&players[currentPlayer].getX()==numColumns-1)
-                    {
-                        players[currentPlayer].setMoney(players[currentPlayer].getMoney()+200);
-                    }
-                    
-
-                }
-                Property currentProperty=property[players[currentPlayer].getY()][players[currentPlayer].getX()];
-                if(currentProperty.getIsJail())
-                {
-                    currentPerson.setInJail(true);
-                    currentPerson.setX(0);
-                    currentPerson.setY(10);
-                    nextTurn();
-                }
-                if(currentProperty.getThePlayer()==null&&currentProperty.getThePlayer()!=currentPerson)
-                {
-                    payRent=false;
-                    attack=false;
-                }
-                else
-                {
-                    payRent=true;
-                    attack=true;
-                }
-                if(currentProperty.getThePlayer()==currentPerson)
-                {
-                    upgrade=true;
-                    payRent=false;
-                }
-                else
-                    upgrade=false;
-                if(currentProperty.getThePlayer()==null&&currentProperty.getCanPurchase())
-                {
-                    purchase=true;
-                }
-                else
-                    purchase=false;
-                
-//                if(!currentProperty.getCanPurchase())
-//                {
-//                    nextTurn();
-//                }
-                if(currentPerson.getMoney()>=250&&canUpgrade)
-                {
-                    upgradeArmy=true;
-                }
-                else
-                {
-                    upgradeArmy=false;
-                    canUpgrade=false;
-                }
-                if(currentProperty.getName().contentEquals("Good"))
-                {
-                    drawGoodCard=true;
-                    purchase=false;
-                    attack=false;
-                    payRent=false;
-                }
-                if(currentProperty.getName().contentEquals("Bad"))
-                {
-                    drawBadCard=true;
-                    purchase=false;
-                    attack=false;
-                    payRent=false;
-                }
-                diceRoll=false;
-                decision=true;
-            }
+            diceRoll=true;
+            movePlayer();
         }
-        else if(decision)
+        if(decision)
         {
             
             Property currentProperty=property[players[currentPlayer].getY()][players[currentPlayer].getX()];
@@ -247,6 +154,116 @@ public class LeftClick extends Mouse implements Runnable
         yAnim=0;
         turnAnimation=true;
         canUpgrade=true;
-        return;
+        if(AIOn&&(currentPlayer==1||currentPlayer==2||currentPlayer==3))
+        {
+            diceRoll=true;
+            movePlayer();
+            monopoly.project.MonopolyProject.AITurn();
+            nextTurn();
+        }
+    }
+    public static void movePlayer()
+    {
+        if(diceRoll)
+        {
+            int numberOfSquaresNeededToMove=0;
+            dice=new Dice();
+            dice2=new Dice();
+            numberOfSquaresNeededToMove=Dice.addSides();
+            Player currentPerson=players[currentPlayer];
+            while(numberOfSquaresNeededToMove>=1)
+            {
+                Property currentProperty=property[currentPerson.getY()][currentPerson.getX()];
+                if(currentPerson.getX()<numColumns-1&&currentPerson.getY()==0)
+                {
+                    currentPerson.setX(currentPerson.getX()+1);
+                    numberOfSquaresNeededToMove--;
+                }
+                else if(currentPerson.getX()==numColumns-1&&currentPerson.getY()<=numRows-2)
+                {
+                    currentPerson.setY(currentPerson.getY()+1);
+                    numberOfSquaresNeededToMove--;
+                }
+                else if(currentPerson.getX()>=1&&currentPerson.getY()<=numRows-1)
+                {
+                    currentPerson.setX(currentPerson.getX()-1);
+                    numberOfSquaresNeededToMove--;
+                }
+                else if(currentPerson.getX()==0&&currentPerson.getY()>=0)
+                {
+                    currentPerson.setY(currentPerson.getY()-1);
+                    numberOfSquaresNeededToMove--;
+                }
+                else
+                    numberOfSquaresNeededToMove--;
+                if(currentPerson.getY()==numRows-1&&currentPerson.getX()==numColumns-1)
+                {
+                    currentPerson.setMoney(currentPerson.getMoney()+200);
+                }
+
+
+            }
+            Property currentProperty=property[currentPerson.getY()][currentPerson.getX()];
+            if(currentProperty.getIsJail())
+            {
+                currentPerson.setInJail(true);
+                currentPerson.setX(0);
+                currentPerson.setY(10);
+                nextTurn();
+            }
+            if(currentProperty.getThePlayer()==null&&currentProperty.getThePlayer()!=currentPerson)
+            {
+                payRent=false;
+                attack=false;
+            }
+            else
+            {
+                payRent=true;
+                attack=true;
+            }
+            if(currentProperty.getThePlayer()==currentPerson)
+            {
+                upgrade=true;
+                payRent=false;
+            }
+            else
+                upgrade=false;
+            if(currentProperty.getThePlayer()==null&&currentProperty.getCanPurchase())
+            {
+                purchase=true;
+            }
+            else
+                purchase=false;
+
+//                if(!currentProperty.getCanPurchase())
+//                {
+//                    nextTurn();
+//                }
+            if(currentPerson.getMoney()>=250&&canUpgrade)
+            {
+                upgradeArmy=true;
+            }
+            else
+            {
+                upgradeArmy=false;
+                canUpgrade=false;
+            }
+            if(currentProperty.getName().contentEquals("Good"))
+            {
+                drawGoodCard=true;
+                purchase=false;
+                attack=false;
+                payRent=false;
+            }
+            if(currentProperty.getName().contentEquals("Bad"))
+            {
+                drawBadCard=true;
+                purchase=false;
+                attack=false;
+                payRent=false;
+            }
+            diceRoll=false;
+            decision=true;
+        }
     }
 }

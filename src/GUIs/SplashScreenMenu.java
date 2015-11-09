@@ -58,6 +58,13 @@ public class SplashScreenMenu extends monopoly.project.MonopolyProject implement
             g.setColor(black);
         g.drawString(nice, 0,  (int)(yscale*yscale)*28);
         
+        nice=AIS;
+        if(AIH)
+            g.setColor(selected);
+        else
+            g.setColor(black);
+        g.drawString(nice, 0,  (int)(yscale*yscale)*35);
+        
         g.scale( 1.0/xscale,1.0/yscale );
         g.rotate(-rot  * Math.PI/180.0);
         g.translate(-xpos,-ypos);

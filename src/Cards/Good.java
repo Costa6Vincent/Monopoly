@@ -63,10 +63,11 @@ public class Good extends Cards
         card[4] = new Good("Card5","last light durins day");
         card[4].setEffect("Collect 200");
         
-        card[5] = new Good("Card6","");
-        card[5].setEffect("Advance buy property from bank");
+        card[5] = new Good("Card6","Host a dinner");
+        card[5].setEffect("pay 50 to each player");
         
-        card[6] = new Good("","");
+        card[6] = new Good("Card7","");
+        card[6].setEffect("Advance buy property from bank");
         card[7]= new Good("","");
         card[8]= new Good("","");
         card[9]= new Good("","");

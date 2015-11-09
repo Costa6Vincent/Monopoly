@@ -20,7 +20,7 @@ public class MouseMoved  extends monopoly.project.MonopolyProject implements Run
               int ypos = getYNormal(e.getY() - getY(0))+60;
               int column = xpos/(xdelta/2);
               int row = ypos/(ydelta/2);
-
+              
               if(xpos>getWidth2()/2&&xpos<getWidth2()/2+StartGameS.length()*25
               &&ypos<453&&ypos>413)
                   StartGameH=true;
@@ -46,6 +46,13 @@ public class MouseMoved  extends monopoly.project.MonopolyProject implements Run
                   ExitH=true;
               else
                   ExitH=false;
+              
+              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+AIS.length()*25
+              &&ypos<180&&ypos>140)
+                  AIH=true;
+              else
+                  AIH=false;
+              
         }
     }
 }
