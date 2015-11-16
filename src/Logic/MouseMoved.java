@@ -21,37 +21,44 @@ public class MouseMoved  extends monopoly.project.MonopolyProject implements Run
               int column = xpos/(xdelta/2);
               int row = ypos/(ydelta/2);
               
-              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+StartGameS.length()*25
-              &&ypos<453&&ypos>413)
-                  StartGameH=true;
-              else
-                  StartGameH=false;
-              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+SettingsS.length()*25
-              &&ypos<407&&ypos>362)
-                  SettingsH=true;
-              else
-                  SettingsH=false;
-              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+HelpS.length()*25
-              &&ypos<344&&ypos>302)
-                  HelpH=true;
-              else
-                  HelpH=false;
-              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+TutorialS.length()*25
-              &&ypos<283&&ypos>249)
-                  TutorialH=true;
-              else
-                  TutorialH=false;
-              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+ExitS.length()*25
-              &&ypos<233&&ypos>190)
-                  ExitH=true;
-              else
-                  ExitH=false;
-              
-              if(xpos>getWidth2()/2&&xpos<getWidth2()/2+AIS.length()*25
-              &&ypos<180&&ypos>140)
-                  AIH=true;
-              else
-                  AIH=false;
+              if(!settings)
+              {
+                if(xpos>getWidth2()/2&&xpos<getWidth2()/2+StartGameS.length()*25
+                &&ypos<453&&ypos>413)
+                    StartGameH=true;
+                else
+                    StartGameH=false;
+                if(xpos>getWidth2()/2&&xpos<getWidth2()/2+SettingsS.length()*25
+                &&ypos<407&&ypos>362)
+                    SettingsH=true;
+                else
+                    SettingsH=false;
+                if(xpos>getWidth2()/2&&xpos<getWidth2()/2+HelpS.length()*25
+                &&ypos<344&&ypos>302)
+                    HelpH=true;
+                else
+                    HelpH=false;
+                if(xpos>getWidth2()/2&&xpos<getWidth2()/2+TutorialS.length()*25
+                &&ypos<283&&ypos>249)
+                    TutorialH=true;
+                else
+                    TutorialH=false;
+                if(xpos>getWidth2()/2&&xpos<getWidth2()/2+ExitS.length()*25
+                &&ypos<233&&ypos>190)
+                    ExitH=true;
+                else
+                    ExitH=false;
+
+                if(xpos>getWidth2()/2&&xpos<getWidth2()/2+AIS.length()*25
+                &&ypos<180&&ypos>140)
+                    AIH=true;
+                else
+                    AIH=false;
+              }
+              else if(settings)
+              {
+                  
+              }
               
         }
     }

@@ -20,6 +20,11 @@ public abstract class Cards
         description=_desc;
         
     }
+    public static void InitializeDataBase()
+    {
+        Good.InitializeDatabase();
+        Bad.InitializeDatabase();
+    }
 
     public String getName() {
         return name;

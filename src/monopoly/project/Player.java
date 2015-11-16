@@ -1,4 +1,5 @@
 package monopoly.project;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -10,10 +11,10 @@ public class Player
     private int Money;
     private Image splashImage;
     private Image onBoardImage;
-    static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.PNG");
-    static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.PNG");
-    static private Image player3=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player3.PNG");
-    static private Image player4=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player4.PNG");
+    static private Image player1=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player1.JPG");
+    static private Image player2=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player2.JPG");
+    static private Image player3=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player3.JPG");
+    static private Image player4=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/Player4.JPG");
     static private Image p1onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p1onBoard.PNG");;
     static private Image p2onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p2onBoard.PNG");;
     static private Image p3onBoard=Toolkit.getDefaultToolkit().getImage("./Pictures/PlayerPieces/p3onBoard.PNG");;
@@ -25,16 +26,20 @@ public class Player
     private int numProperty;
     private boolean inJail;
     private Army theArmy;
+    private boolean inGame;
+    private Color color; 
     
 
    
     
-    Player(String _name,int _money,int numProperties, Image _Image,Image _Image2 )
+    Player(String _name,int _money,int numProperties,boolean _inGame,Color _color, Image _Image,Image _Image2 )
     {
         name=_name;
         Money=_money;
         splashImage=_Image;
         onBoardImage=_Image2;
+        inGame=_inGame;
+        color=_color;
     }
 
     public boolean getInJail() {
@@ -43,6 +48,14 @@ public class Player
 
     public void setInJail(boolean inJail) {
         this.inJail = inJail;
+    }
+
+    public boolean getInGame() {
+        return inGame;
+    }
+
+    public void SetInGame(boolean inGame) {
+        this.inGame = inGame;
     }
     
     public void addProperty(Property _property)
@@ -157,9 +170,13 @@ public class Player
         return onBoardImage;
     }
 
+    public Color getColor() {
+        return color;
+    }
+    
     public void drawonBoard(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  ) 
     {
-        g.drawImage(getOnBoardImage(), xpos, ypos, length, height,image);
+        g.drawImage(getOnBoardImage(), xpos, ypos, length/2, height,image);
     }
     public void drawonWindow(Graphics2D g,int xpos,int ypos,int length,int height,MonopolyProject image  )
     {
@@ -168,11 +185,10 @@ public class Player
     
     public static void InitializeDataBase2()
     {
-        players[0]=new Player("Player1",5000,0,player1,p1onBoard);
-        
-        players[1]=new Player("Player2",5000,0,player2,p2onBoard);
-        players[2]=new Player("Player3",5000,0,player3,p3onBoard);
-        players[3]=new Player("Player4",5000,0,player4,p4onBoard);
+        players[0]=new Player("Player1",5000,0,true,Color.red,player1,p1onBoard);
+        players[1]=new Player("Player2",5000,0,true,Color.blue,player2,p2onBoard);
+        players[2]=new Player("Player3",5000,0,true,Color.green,player3,p3onBoard);
+        players[3]=new Player("Player4",5000,0,true,Color.magenta,player4,p4onBoard);
     }
 
    

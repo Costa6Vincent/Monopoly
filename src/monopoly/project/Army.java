@@ -80,13 +80,14 @@ public class Army{
         name = _name;
     }
     
-    public void determineWin(int _propertyPower)
+    public boolean determineWin(int _propertyPower)
     {
         if(_propertyPower>getCurrentArmyPower())
         {
             ArmyDestroyed();
             System.out.println("army lost!");
             MonopolyProject.StringMove=true;
+            return false;
            // GUIs.Event.=true;
         }
         else
@@ -94,6 +95,7 @@ public class Army{
             ArmyWin();
             System.out.println("army won!");
             MonopolyProject.StringMove=true;
+            return true;
         }
     }
         

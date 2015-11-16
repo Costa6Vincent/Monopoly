@@ -7,6 +7,7 @@ package Logic;
 
 import java.awt.event.MouseEvent;
 import monopoly.project.*;
+import monopoly.project.MonopolyProject.*;
 
 
 /**
@@ -17,33 +18,6 @@ public class LeftClick extends Mouse implements Runnable
 {
     public static void Click1(MouseEvent e)
     {
-        if(!gameStart)
-        {
-            if(StartGameH)
-            {
-                startMenuAnim=true;
-            }
-            if(HelpH)
-            {
-//                String url = "";
-//                File htmlFile = new File(url);
-//                Desktop.getDesktop().browse(htmlFile.toURI());
-            }
-            if(ExitH)
-            {
-                System.exit(0);
-            }
-            if(AIH)
-            {
-                AIOn=true;
-                startMenuAnim=true;
-            }
-        }
-        if(players[currentPlayer].getInJail())
-        {
-            players[currentPlayer].setInJail(false);
-            nextTurn();
-        }
         int numberOfSquaresNeededToMove=0;
         int xdelta = getWidth2()/numColumns*2;
         int ydelta = getHeight2()/numRows*2;
@@ -51,14 +25,62 @@ public class LeftClick extends Mouse implements Runnable
         int ypos = e.getY() - getY(0);
         int column = xpos/(xdelta/2);
         int row = ypos/(ydelta/2);
-        if((diceRow1==row&&diceColumn1==column)||(diceRow2==row&&diceColumn2==column))
+        if(!gameStart)
         {
-            diceRoll=true;
+            if(!settings)
+            {
+                if(StartGameH)
+                {
+                    startMenuAnim=true;
+                }
+                if(HelpH)
+                {
+    //                
+                }
+                if(SettingsH)
+                {
+                    settings=true;
+                }
+                if(ExitH)
+                {
+                    System.exit(0);
+                }
+                if(AIH)
+                {
+                    AIOn=true;
+                    startMenuAnim=true;
+                }
+            }
+            else if(settings)
+            {
+                if(xpos>SoundsX&&xpos<SoundsX+40
+                &&ypos<SoundsY&&ypos>SoundsY-40)
+                {
+                    soundsCounter++;
+                    if(soundsCounter%2==0)
+                        soundsOn=true;
+                    else
+                        soundsOn=false;
+                }
+            }
+        }
+        if(players[currentPlayer].getInJail())
+        {
+            players[currentPlayer].setInJail(false);
+            nextTurn();
+        }
+        
+        if(diceRoll&&(diceRow1==row&&diceColumn1==column)||(diceRow2==row&&diceColumn2==column))
+        {
+            
             movePlayer();
+            diceRoll=false;
+            dicerollN=true;
+            decision=true;
+            return;
         }
         if(decision)
         {
-            
             Property currentProperty=property[players[currentPlayer].getY()][players[currentPlayer].getX()];
             Player currentPerson=players[currentPlayer];
             if(currentPerson.getMoney()>=250&&canUpgrade)
@@ -78,6 +100,7 @@ public class LeftClick extends Mouse implements Runnable
                     currentProperty.addUpgrade();
                     currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getCost());
                     currentPerson.getAllProperties();
+                    purchaseN=true;
                     nextTurn();
                 }
                 
@@ -122,13 +145,21 @@ public class LeftClick extends Mouse implements Runnable
             {
               if(currentPerson.getTheArmy()!=null)
               {
-                currentPerson.getTheArmy().determineWin(currentProperty.getDefense());
+                boolean win = currentPerson.getTheArmy().determineWin(currentProperty.getDefense());
+                if(win)
+                {
+                    currentProperty.setThePlayer(currentPerson);
+                    currentPerson.addProperty(currentProperty);
+                }
+                warH=true;
+                nextTurn();
               }
             }
             if(canUpgrade&&upgradeArmy&&xpos>=upgradeArmyX&&xpos<upgradeArmyX+upgradeArmyLength&&ypos>upgradeArmyY-YTITLE&&ypos<upgradeArmyY+upgradeArmyHeight-YTITLE)
             {
-              currentPerson.setMoney(currentPerson.getMoney()-250);
-              currentPerson.getTheArmy().setCurrentArmyPower(currentPerson.getTheArmy().getCurrentArmyPower()+250);
+              currentPerson.setMoney(currentPerson.getMoney()-500);
+              currentPerson.getTheArmy().setCurrentArmyPower(currentPerson.getTheArmy().getCurrentArmyPower()+100);
+              upgradeArmyH=true;
               canUpgrade=false;
             }
 //            for(int index=0;index<players[currentPlayer].getNumProperty();index++)
@@ -146,21 +177,30 @@ public class LeftClick extends Mouse implements Runnable
         currentPlayer++;
         if(currentPlayer>=numPlayers)
             currentPlayer=0;
-        players[currentPlayer].setIsTurn(true);
-        decision=false;
-        diceRoll=true;
-        turnCount++;
-        xAnim=0;
-        yAnim=0;
-        turnAnimation=true;
-        canUpgrade=true;
-        if(AIOn&&(currentPlayer==1||currentPlayer==2||currentPlayer==3))
+        if(!players[currentPlayer].getInGame())
+            nextTurn();
+        if(!AIOn)
+        {
+            players[currentPlayer].setIsTurn(true);
+            decision=false;
+            diceRoll=true;
+            turnCount++;
+            xAnim=0;
+            yAnim=0;
+            turnAnimation=true;
+            canUpgrade=true;
+        }
+        if(AIOn&&currentPlayer!=0)
         {
             diceRoll=true;
             movePlayer();
             monopoly.project.MonopolyProject.AITurn();
             nextTurn();
+            return;
         }
+        turns++;
+        return;
+        
     }
     public static void movePlayer()
     {
@@ -204,6 +244,17 @@ public class LeftClick extends Mouse implements Runnable
 
             }
             Property currentProperty=property[currentPerson.getY()][currentPerson.getX()];
+//            if(currentProperty.getName().contentEquals("Smaug"))
+//            {
+//                Cards.Bad badCard=Cards.Bad.getRandomBadCard();
+//                badCard.Effect(currentPerson);
+//                
+//            }
+//            if(currentProperty.getName().contentEquals("Treasure"))
+//            {
+//                Cards.Good goodCard=Cards.Good.getRandomGoodCard();
+//                goodCard.Effect(currentPerson);
+//            }
             if(currentProperty.getIsJail())
             {
                 currentPerson.setInJail(true);
@@ -248,22 +299,24 @@ public class LeftClick extends Mouse implements Runnable
                 upgradeArmy=false;
                 canUpgrade=false;
             }
-            if(currentProperty.getName().contentEquals("Good"))
-            {
-                drawGoodCard=true;
-                purchase=false;
-                attack=false;
-                payRent=false;
-            }
-            if(currentProperty.getName().contentEquals("Bad"))
-            {
-                drawBadCard=true;
-                purchase=false;
-                attack=false;
-                payRent=false;
-            }
+//            if(currentProperty.getName().contentEquals("Good"))
+//            {
+//                drawGoodCard=true;
+//                purchase=false;
+//                attack=false;
+//                payRent=false;
+//            }
+//            if(currentProperty.getName().contentEquals("Bad"))
+//            {
+//                drawBadCard=true;
+//                purchase=false;
+//                attack=false;
+//                payRent=false;
+//            }
             diceRoll=false;
             decision=true;
+            if(AIOn&&(currentPlayer!=1||currentPlayer!=2||currentPlayer!=3))
+                decision=true;
         }
     }
 }

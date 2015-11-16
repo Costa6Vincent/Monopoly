@@ -34,13 +34,35 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 2 * YBORDER + 900;
     
     public static Image image;
+    public static Image image2;
     Graphics2D g;
+    
+    public static int numSongs=5;
+    sound music[]=new sound[numSongs];
+    
+    public static sound diceroll=null;
+    public static boolean dicerollN=false;
+    
+    public static sound purchasesound=null;
+    public static boolean purchaseN;
+    
+    public static sound loseSound=null;
+    public static boolean loseN;
+    
+    public static sound warSound=null;
+    public static boolean warH;
+    
+    public static sound upgradeArmySound=null;
+    public static boolean upgradeArmyH;
     
     static Dimension dim;
 
+    public static PanAndZoom pen = new PanAndZoom();
+    
     public static boolean animateFirstTime = true;
     
     public static int FPS=60;
+    public static int turns=0;
     
     public static Image image1=null;
     
@@ -52,6 +74,8 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static Font font2= new Font("Kabel",Font.BOLD,75);
     public static Font font3= new Font("BrushScriptMT",Font.BOLD,30);
     public static Image Board=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/Board2.JPG");
+    public static Image boardMiddle=Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/boardMiddle.JPG");
+    
    
     public static int xsize = -1;
     public static int ysize = -1;
@@ -137,8 +161,27 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static boolean drawGoodCard;
     public static boolean drawBadCard;
     public static String ipAddress = new String();
-    boolean large,small;
+    public static boolean large,small;
     public static boolean gameStart;
+    public static boolean musicOn;
+    public static boolean soundsOn;
+    public static boolean settings;
+    
+    
+    
+    public static int MusicX;
+    public static int MusicY;
+    public static int MusicLength;
+    public static int MusicHeight;
+    public static int musicCounter;
+    
+    public static int SoundsX;
+    public static int SoundsY;
+    public static int SoundsLength;
+    public static int SoundsHeight;
+    public static int soundsCounter;
+    
+    
     
     public static Property property[][];
     public static final int numPlayers=4;
@@ -158,6 +201,8 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static boolean isConnecting = false;
     public static boolean isClient;
     public static boolean isServer;
+    
+    Image background =Toolkit.getDefaultToolkit().getImage("./Pictures/BoardPieces/scroll.JPG");
     
     //System.out.println(army);
     
@@ -376,7 +421,6 @@ public class MonopolyProject extends JFrame implements Runnable {
                                 ServerHandler.disconnect();
                             }
                         gameStarted = false;
-                        reset();
                     }
                 }
                 if(gameStart)
@@ -427,6 +471,7 @@ public class MonopolyProject extends JFrame implements Runnable {
             g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,RenderingHints.VALUE_COLOR_RENDER_QUALITY);
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
         }
+            
 
 //fill background
         g.setColor(Color.cyan);
@@ -461,18 +506,18 @@ public class MonopolyProject extends JFrame implements Runnable {
                 int menuLength=windowAlloc;
                 int menuHeight=getHeight2()-2;
                 g.setColor(Color.black);
-                g.fillRect(menuxpos, menuypos, menuLength+50, menuHeight+50);
-                g.setColor(Color.red);
+                g.drawImage(background,menuxpos, menuypos, menuLength, menuHeight,this);
+                g.setColor(players[currentPlayer].getColor());
                 Stroke nice = g.getStroke();
-                g.setStroke(new BasicStroke(20.0f));
-                g.drawRect(menuxpos, menuypos, menuLength, menuHeight);
+                g.setStroke(new BasicStroke(10.0f));
+                g.drawRect(menuxpos, menuypos+6, menuLength-28, menuHeight-14);
                 g.setStroke(nice);
             }
 
     //Display the objects of the board
             g.setColor(Color.gray);
 
-            //g.fillRect(getX(0)+getWidth2()/numColumns+1, getY(0)+getHeight2()/numRows+1,(getWidth2()*(numColumns-2))/numColumns, (getHeight2()*(numRows-2))/numRows);
+            g.drawImage(boardMiddle,getX(0)+boardAlloc/numColumns-5, getY(0)+getHeight2()/numRows+1,(boardAlloc*(numColumns-2))/numColumns+5, (getHeight2()*(numRows-2))/numRows,this);
             //g.drawImage(Board, YTITLE, YTITLE*2, boardAlloc+XBORDER, getHeight2()-YTITLE,this);
             for (int zrow=0;zrow<numRows;zrow++)
             {
@@ -490,7 +535,7 @@ public class MonopolyProject extends JFrame implements Runnable {
 
                         if(property[zrow][zcolumn].getThePlayer()!=null)
                         {
-                            g.setColor(Color.green);
+                            g.setColor(property[zrow][zcolumn].getThePlayer().getColor());
                             for(int index=0;index<property[zrow][zcolumn].getUpgrade();index++)
                             {
                                 g.fillOval(xpos+length/8+index*20, ypos+height/8, length/5, height/5);
@@ -525,8 +570,12 @@ public class MonopolyProject extends JFrame implements Runnable {
                 g.drawString(text2, xpos+length/2, ypos+length*3/4); 
                 if(index==currentPlayer)
                 {
-                    g.setColor(Color.red);
-                    g.drawOval(xpos-length/2,ypos-height/2,length*2,height*2);
+                    Stroke nice = g.getStroke();
+                    float size=7.0f;
+                    g.setStroke(new BasicStroke(size));
+                    g.setColor(players[index].getColor());
+                    g.drawOval(xpos-length/4,ypos-height/4,length+length/2,height*2);
+                    g.setStroke(nice);
                 }
                 
             }
@@ -604,8 +653,15 @@ public class MonopolyProject extends JFrame implements Runnable {
             {
                 e.printStackTrace();
             }
+            if(settings)
+            {
+                GUIs.Settings.drawSettingsWindow(g);
+            }
             
+        
         gOld.drawImage(image, 0, 0, null);
+        
+        
         
     }
     
@@ -621,6 +677,7 @@ public class MonopolyProject extends JFrame implements Runnable {
         {
             animate();
             repaint();
+            pen.canvas.repaint();
             double seconds = fps;    //time that 1 frame takes.
             int miliseconds = (int) (1000.0 * seconds);
             try 
@@ -661,6 +718,7 @@ public class MonopolyProject extends JFrame implements Runnable {
         Property.InitializeDataBase();
         Player.InitializeDataBase2();
         Army.InitializeDataBase();
+        Cards.Cards.InitializeDataBase();
         for(int index=0;index<numPlayers;index++)
         {
             players[index].setX(numColumns-1);
@@ -683,44 +741,64 @@ public class MonopolyProject extends JFrame implements Runnable {
         turnAnimation=false;
         startMenuAnim=false;
         
-        //PanAndZoom pen = new PanAndZoom();
+        
         AIOn=false;
         
         
         purchaseX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        purchaseY=getY(0)+(750)+getHeight2()/numRows-YTITLE/2;
-        purchaseLength=(getWidth2()/numColumns)*2;
-        purchaseHeight=(getHeight2()/numRows)/2;
+        purchaseY=getY(0)+(750)+getHeight2()/numRows-YTITLE/2+20;
+        purchaseLength=(boardAlloc/numColumns)+20;
+        purchaseHeight=(boardAlloc/numRows)/3+10;
         
         endTurnX=getX(0)+(4)+boardAlloc+YTITLE*2;
         endTurnY=getY(0)+(750-purchaseHeight-2)+getHeight2()/numRows-YTITLE/2;
-        endTurnLength=(getWidth2()/numColumns)*2;
-        endTurnHeight=(getHeight2()/numRows)/2;
+        endTurnLength=(boardAlloc/numColumns);
+        endTurnHeight=(boardAlloc/numRows)/3+10;
         
         payX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        payY=getY(0)+(750-purchaseHeight-2-endTurnHeight)+getHeight2()/numRows-YTITLE/2;
-        payLength=(getWidth2()/numColumns)*2;
-        payHeight=(getHeight2()/numRows)/2;
+        payY=getY(0)+(750-purchaseHeight-2-endTurnHeight)+getHeight2()/numRows-YTITLE/2+20;
+        payLength=(boardAlloc/numColumns);
+        payHeight=(boardAlloc/numRows)/3+10;
         
         upgradeX=getX(0)+(4)+boardAlloc+YTITLE*2;
         upgradeY=getY(0)+(750-purchaseHeight-2-endTurnHeight-payHeight)+getHeight2()/numRows-YTITLE/2;
-        upgradeLength=(getWidth2()/numColumns)*2;
-        upgradeHeight=(getHeight2()/numRows)/2;
+        upgradeLength=(boardAlloc/numColumns);
+        upgradeHeight=(boardAlloc/numRows)/3+10;
         
         attackX=getX(0)+(4)+boardAlloc+YTITLE*2;
-        attackY=getY(0)+(750-purchaseHeight-2-endTurnHeight-2-payHeight-2)+getHeight2()/numRows-YTITLE/2;
-        attackLength=(getWidth2()/numColumns)*2;
-        attackHeight=(getHeight2()/numRows)/2;
+        attackY=getY(0)+(750-purchaseHeight-2-endTurnHeight-2-payHeight-2)+getHeight2()/numRows-YTITLE/2+20;
+        attackLength=(boardAlloc/numColumns);
+        attackHeight=(boardAlloc/numRows)/3+10;
         
         upgradeArmyX=getX(0)+(4)+boardAlloc+YTITLE*2;
         upgradeArmyY=getY(0)+(750-purchaseHeight-2-endTurnHeight-2-payHeight-2-attackHeight-2)+getHeight2()/numRows-YTITLE/2;
-        upgradeArmyLength=(getWidth2()/numColumns)*2;
-        upgradeArmyHeight=(getHeight2()/numRows)/2;
+        upgradeArmyLength=(boardAlloc/numColumns)+11*8;
+        upgradeArmyHeight=(boardAlloc/numRows)/3+10;
+        
+        MusicX=WINDOW_WIDTH/2;
+        MusicY=200;
+        MusicLength=0;
+        MusicHeight=0;
+
+        SoundsX=WINDOW_WIDTH/2;
+        SoundsY=300;
+        SoundsLength=0;
+        SoundsHeight=0;
         
         large=false;
         small=false;
+        diceRoll=true;
         
         canUpgrade=true;
+        musicOn=true;
+        
+        turns=0;
+        
+//        music[0]=new sound("anunxepectedparty.wav");
+//        music[1]=new sound("dreamingofbagend.wav");
+//        music[2]=new sound("oldfriends.wav");
+//        music[3]=new sound("radagastthebrown.wav");
+//        music[4]=new sound("theadventurebegins.wav");
         
         
     }
@@ -843,15 +921,129 @@ public class MonopolyProject extends JFrame implements Runnable {
                 yAnim=0;
             }
         }
-        if(turnCount%5==4)
+//        if(turns%5==4)
+//        {
+//            for(int index=0;index<numPlayers;index++)
+//            {
+//                int totalCost=0;
+//                for(int index2=0;index2<players[index].getNumProperty();index2++)
+//                {
+//                    Property currentProp=players[index].getPropertyOwnership(index2);
+//                    totalCost+=currentProp.getTax();
+//                }
+//                players[index].setMoney(players[index].getMoney()-totalCost);
+//                boolean keepLooping=true;
+//                while(keepLooping)
+//                {
+//                    int randomRow=(int)(Math.random()*numRows+1);
+//                    int randomColumn=(int)(Math.random()*numColumns+1);
+//                    if(property[randomRow][randomColumn]!=null)
+//                    {
+//                        keepLooping=false;
+//                        players[index].setY(randomRow);
+//                        players[index].setX(randomColumn);
+//                    }
+//                    
+//                }
+//                
+//            }
+//        }
+        if(gameStart&&musicOn)
         {
+            if(music[0]==null)
+                music[0]=new sound("./Sounds/Music/TheHobbit/anunxepectedparty.wav");
+            
+            if(music[1]==null&&music[0].donePlaying)
+                music[1]=new sound("./Sounds/Music/TheHobbit/dreamingofbagend.wav");
+            
+            if(music[1]!=null&&music[2]==null&&music[1].donePlaying)
+                music[2]=new sound("./Sounds/Music/TheHobbit/oldfriends.wav");
+            
+            if(music[2]!=null&&music[3]==null&&music[2].donePlaying)
+                music[3]=new sound("./Sounds/Music/TheHobbit/radagastthebrown.wav");
+            
+            if(music[3]!=null&&music[4]==null&&music[3].donePlaying)
+                music[4]=new sound("./Sounds/Music/TheHobbit/theadventurebegins.wav");
+            
+            if(music[4]!=null&&music[4].donePlaying)
+            {
+                for(int index=0;index<numSongs;index++)
+                {
+                    music[index]=null;
+                }
+            }
+            if(dicerollN)
+            {
+                diceroll=new sound("./Sounds/Tones/Dice.wav");
+                dicerollN=false;
+            }
+            if(purchaseN)
+            {
+                purchasesound=new sound("./Sounds/Tones/purchase.wav");
+                purchaseN=false;
+            }
+            if(warH)
+            {
+                warSound=new sound("./Sounds/Tones/war.wav");
+                warH=false;
+            }
+            if(upgradeArmyH)
+            {
+                upgradeArmySound=new sound("./Sounds/Tones/upgradeArmy.wav");
+                upgradeArmyH=false;
+            }
             
         }
+        
+        for(int index=0;index<numPlayers;index++)
+        {
+            if(players[index].getMoney()<=0)
+            {
+                players[index].SetInGame(false);
+                loseSound=new sound("./Sounds/Tones/lose.wav");
+            }
+        }
+        
     }
     
     
     public static void AITurn()
     {
+        Player currentPerson=players[currentPlayer];
+        Property currentProperty=property[players[currentPlayer].getY()][players[currentPlayer].getX()];
+        
+        if(currentProperty.getThePlayer()==null&&currentProperty.getCanPurchase()&&currentPerson.getMoney()>=currentProperty.getCost())
+        {
+            currentProperty.addPlayer(currentPerson);
+            currentPerson.addProperty(currentProperty);
+            currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getCost());
+        }
+        else if(currentProperty.getThePlayer()!=null&&currentProperty.getThePlayer()!=currentPerson&&currentPerson.getMoney()>=currentProperty.getRent())
+        {
+            currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getRent());
+            currentProperty.getThePlayer().setMoney(currentProperty.getThePlayer().getMoney()+currentProperty.getRent());
+        }
+        else if (currentProperty.getThePlayer()!=null&&currentProperty.getThePlayer()!=currentPerson&&currentPerson.getMoney()<currentProperty.getRent()) 
+        {
+            while(currentPerson.getMoney()<currentProperty.getRent()&&currentPerson.getNumProperty()>=1)
+            {
+                currentPerson.deleteProperty(currentPerson.getPropertyOwnership(currentPerson.getNumProperty()-1));
+            }
+            if(currentPerson.getMoney()<currentProperty.getRent())
+            {
+                currentPerson.SetInGame(false);
+            }
+            else
+            {
+                currentPerson.setMoney(currentPerson.getMoney()-currentProperty.getRent());
+                currentProperty.getThePlayer().setMoney(currentProperty.getThePlayer().getMoney()+currentProperty.getRent());
+            }
+            
+            
+            
+        }
+            
+        return;
         
     }
     
@@ -937,9 +1129,10 @@ class sound implements Runnable {
         }
     }
 }
-class PanAndZoom {
+class PanAndZoom extends MonopolyProject{
  
     PanAndZoomCanvas canvas;
+    MonopolyProject image=new MonopolyProject();
  
     public static void main(String[] args) {
 	javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -951,6 +1144,7 @@ class PanAndZoom {
 
     public PanAndZoom() {
 	JFrame frame = new JFrame();
+        
 	canvas = new PanAndZoomCanvas();
 	PanningHandler panner = new PanningHandler();
 	canvas.addMouseListener(panner);
@@ -958,7 +1152,7 @@ class PanAndZoom {
 	canvas.setBorder(BorderFactory.createLineBorder(Color.black));
 
 	// code for handling zooming
-	JSlider zoomSlider = new JSlider(JSlider.HORIZONTAL, 0, 300, 100);
+	JSlider zoomSlider = new JSlider(JSlider.HORIZONTAL, 0, 500, 100);
 	zoomSlider.setMajorTickSpacing(25);
 	zoomSlider.setMinorTickSpacing(5);
 	zoomSlider.setPaintTicks(true);
@@ -1018,7 +1212,56 @@ class PanAndZoom {
 	    ourGraphics.setColor(Color.BLACK);
 	    ourGraphics.drawRect(50, 50, 50, 50);
 	    ourGraphics.fillOval(100, 100, 100, 100);
+            
+            
 	    ourGraphics.drawString("Test Affine Transform", 50, 30);
+            if (animateFirstTime) 
+            {
+                if (xsize != getSize().width || ysize != getSize().height) 
+                {
+                    xsize = getSize().width;
+                    ysize = getSize().height;
+                }
+
+                reset();
+                animateFirstTime = false;
+            
+            
+            }
+            int length=boardAlloc/numColumns*4/3;
+            int height2=getHeight2()/numRows;
+            int xpos=image.getX(0)+0*boardAlloc/numColumns;
+            int ypos=image.getY(0)+0*getHeight2()/numRows;
+            property[0][0].draw(ourGraphics,xpos,ypos,length,height2,image);
+            
+            ourGraphics.drawImage(boardMiddle,image.getX(0)+boardAlloc/numColumns-5, image.getY(0)+getHeight2()/numRows+1,(boardAlloc*(numColumns-2))/numColumns+5, (getHeight2()*(numRows-2))/numRows,this);
+            //g.drawImage(Board, YTITLE, YTITLE*2, boardAlloc+XBORDER, getHeight2()-YTITLE,this);
+            for (int zrow=0;zrow<numRows;zrow++)
+            {
+                for (int zcolumn=0;zcolumn<numColumns;zcolumn++)
+                {
+                    if(property[zrow][zcolumn]!=null)
+                    {
+
+                        length=boardAlloc/numColumns*4/3;
+                        height2=getHeight2()/numRows;
+                        xpos=image.getX(0)+zcolumn*boardAlloc/numColumns;
+                        ypos=image.getY(0)+zrow*getHeight2()/numRows;
+
+                        property[zrow][zcolumn].draw(ourGraphics,xpos,ypos,length,height2,image);
+
+                        if(property[zrow][zcolumn].getThePlayer()!=null)
+                        {
+                            ourGraphics.setColor(property[zrow][zcolumn].getThePlayer().getColor());
+                            for(int index=0;index<property[zrow][zcolumn].getUpgrade();index++)
+                            {
+                                ourGraphics.fillOval(xpos+length/8+index*20, ypos+height2/8, length/5, height2/5);
+                            }
+                        }
+
+                    }   
+                }    
+            }
 
 	    // make sure you restore the original transform or else the drawing
 	    // of borders and other components might be messed up
@@ -1065,6 +1308,15 @@ class PanAndZoom {
 	public void mouseMoved(MouseEvent e) {}
 	public void mouseReleased(MouseEvent e) {}
 	}
+        public void mouseWheelMoved(MouseWheelEvent e) 
+        {
+            int notches = e.getWheelRotation();
+            JSlider slider = (JSlider)e.getSource();
+            if(notches<0)
+                slider.setValue(slider.getValue()+5);
+            else
+                slider.setValue(slider.getValue()-5);
+        }
  
     class ScaleHandler implements ChangeListener {
 	public void stateChanged(ChangeEvent e) {

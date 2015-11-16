@@ -5,13 +5,17 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Stroke;
+import java.awt.Toolkit;
 
 
 public class PlayerInfoWindow extends monopoly.project.MonopolyProject
 {
+    
     public static void drawInfoWindow(Graphics2D g)
     {
+        Color black=Color.black;
         if(decision)
             g.setColor(Color.white);
         else
@@ -25,24 +29,16 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
         {
             if(purchase)
             {
+                g.setColor(Color.white);
                 g.fillRect(purchaseX, purchaseY, purchaseLength, purchaseHeight);
-                if(!payRent)
-                    g.fillRect(endTurnX, endTurnY, endTurnLength, endTurnHeight);
-                
-                
-                
-                
                 g.setColor(Color.red);
-                
                 text2 = "Purchase";
                 g.drawString(text2, purchaseX, purchaseY+purchaseHeight*3/4); 
-                
-                
-                
-                
             }
             if(!payRent)
             {
+                g.setColor(Color.white);
+                g.fillRect(endTurnX, endTurnY, endTurnLength, endTurnHeight);
                 g.setColor(Color.red);
                 text2 = "End Turn";
                 g.drawString(text2, endTurnX, endTurnY+endTurnHeight*3/4); 
@@ -97,7 +93,7 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
             g.setColor(Color.red);
             g.drawString(text2, payX, payY+payHeight*3/4); 
         }
-        g.setColor(Color.red);
+        g.setColor(players[currentPlayer].getColor());
         
         Stroke nice = g.getStroke();
         float size=13.0f;
@@ -111,10 +107,10 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
         g.setColor(Color.blue);
         g.drawString(text2, boardAlloc+40, windowAlloc/2-25);
         
-        g.setColor(Color.green);
+        g.setColor(black);
         text2="$";
         g.drawString(text2, boardAlloc+windowAlloc/3+size, 100);
-        g.setColor(Color.green);
+        g.setColor(black);
         text2=""+players[currentPlayer].getMoney();
         g.drawString(text2, boardAlloc+windowAlloc/3+size+20, 100);
         if(players[currentPlayer].getNumProperty()>=1)
@@ -132,16 +128,23 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
         if(players[currentPlayer].getTheArmy()!=null)
         {
             g.setFont(new Font("Impact",Font.ITALIC,40));
-            g.setColor(Color.red);
+            g.setColor(black);
             text2="Army Power: "+players[currentPlayer].getTheArmy().getCurrentArmyPower();
             g.drawString(text2, boardAlloc+windowAlloc/3+size+20,150); 
         }
         if(property[players[currentPlayer].getY()][players[currentPlayer].getX()]!=null)
         {
             g.setFont(new Font("Impact",Font.ITALIC,40));
-            g.setColor(Color.red);
-            text2="Property Power: "+property[players[currentPlayer].getY()][players[currentPlayer].getX()].getDefense();
-            g.drawString(text2, boardAlloc+windowAlloc/3+size+20,200); 
+            g.setColor(black);
+            text2="Property P: "+property[players[currentPlayer].getY()][players[currentPlayer].getX()].getDefense();
+            g.drawString(text2, boardAlloc+windowAlloc/3+size+20,190); 
+        }
+        if(property[players[currentPlayer].getY()][players[currentPlayer].getX()].getThePlayer()==null)
+        {
+            g.setFont(new Font("Impact",Font.ITALIC,40));
+            g.setColor(black);
+            text2="Property Val: "+property[players[currentPlayer].getY()][players[currentPlayer].getX()].getCost();
+            g.drawString(text2, boardAlloc+windowAlloc/3+size+20,230); 
         }
         
         
