@@ -50,6 +50,25 @@ public class LeftClick extends Mouse implements Runnable
                     AIOn=true;
                     startMenuAnim=true;
                 }
+                startMenuAnim=true;
+            }
+            if(HelpH)
+            {
+//                String url = "";
+//                File htmlFile = new File(url);
+//                Desktop.getDesktop().browse(htmlFile.toURI());
+                if(!helpMenuActive)
+                    helpMenuActive = true;
+                
+                if(currentHelpPage==0)
+                    currentHelpPage = 1;
+                else if(currentHelpPage==1)
+                    currentHelpPage = 2;
+
+            }
+            if(ExitH)
+            {
+                System.exit(0);
             }
             else if(settings)
             {

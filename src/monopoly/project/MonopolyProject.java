@@ -28,8 +28,6 @@ import static monopoly.project.MonopolyProject.numColumns;
 import static monopoly.project.MonopolyProject.numPlayers;
 import static monopoly.project.MonopolyProject.numRows;
 import static monopoly.project.MonopolyProject.players;
-import network.ClientHandler;
-import network.ServerHandler;
 
 public class MonopolyProject extends JFrame implements Runnable {
     
@@ -76,7 +74,11 @@ public class MonopolyProject extends JFrame implements Runnable {
     public static int turns=0;
     
     public static Image image1=null;
-    
+    public static Image helpPage1=null;
+    public static Image helpPage2=null;
+    public static Image helpPage3=null;
+    public static Image helpPage4=null;
+            
     public static boolean turnAnimation=false;
     public static int xAnim;
     public static int yAnim;
@@ -217,6 +219,9 @@ public class MonopolyProject extends JFrame implements Runnable {
     
     //System.out.println(army);
     
+    public static int currentHelpPage;
+    public static boolean helpMenuActive;
+    
     public static void main(String[] args) {
 
         
@@ -271,169 +276,20 @@ public class MonopolyProject extends JFrame implements Runnable {
         addKeyListener(new KeyAdapter() {
 
             @Override
-            public void keyPressed(KeyEvent e) {   
-                if (myTurn && gameStarted && e.getKeyCode() == KeyEvent.VK_1)
+            public void keyPressed(KeyEvent e) {  
+                
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE && helpMenuActive)
                 {
-				if (isClient)
-                                {
-                                    System.out.println("sending from client");
-                                    clientValue++;
-					ClientHandler.sendPieceMove(clientValue);
-                                }
-                                else if(isServer)
-                                {
-                                    System.out.println("sending from server");
-                                    serverValue++;
-					ServerHandler.sendPieceMove(serverValue);
-                                }			                    
-                }
-                else if (myTurn && gameStarted && e.getKeyCode() == KeyEvent.VK_2)
-                {
-			if (isClient)
-                                {
-                                    System.out.println("sending from client");
-                                    clientValue+=2;
-					ClientHandler.sendPieceMove(clientValue);
-                                }
-				else if(isServer)
-                                {
-                                    System.out.println("sending from server");
-                                    serverValue+=2;
-					ServerHandler.sendPieceMove(serverValue);
-                                }	
-			                    
-                }                
-                else if (e.getKeyCode() == KeyEvent.VK_S)
-                {
-                    if (!isConnecting)
-                    {
-                        try
-                        {
-                    
-                            isConnecting = true;
-                            System.out.println("is connecting true");
-                            ServerHandler.recieveConnect(5657);
-                            System.out.println("after recieveConnect");
-                            if (ServerHandler.connected)
-                            {
-                                isClient = false;
-                                isServer = true;
-                                myTurn = false;
-                                gameStarted = true;
-                                isConnecting = false;
-                            }
-                        }
-                        catch (IOException ex)
-                        {
-                            System.out.println("Cannot host server: " + ex.getMessage());
-                            isConnecting = false;
-                        }                        
-                    }
-                }
-                else if (e.getKeyCode() == KeyEvent.VK_C)
-                {
-                    if (!isConnecting)
-                    {
-                    
-                            try
-                            {
-                   
-                                isConnecting = true;
-                                ClientHandler.connect(ipAddress, 5657);
-                                if (ClientHandler.connected)
-                                {
-                                    isClient = true;
-                                    myTurn = true;
-                                    gameStarted = true;
-                                    isConnecting = false;
-                                }
-                            }
-                            catch (IOException ex)
-                            {
-                                System.out.println("Cannot join server: " + ex.getMessage());
-                                isConnecting = false;
-                            }                    
-                    }
-                }                
-                else
-                {
-                    if (!gameStarted && ipAddress.length() <= 13)
-                    {
-                        if (e.getKeyCode() == KeyEvent.VK_0)
-                        {
-                            ipAddress += "0";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_1)
-                        {
-                            ipAddress += "1";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_2)
-                        {
-                            ipAddress += "2";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_3)
-                        {
-                            ipAddress += "3";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_4)
-                        {
-                            ipAddress += "4";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_5)
-                        {
-                            ipAddress += "=5";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_6)
-                        {
-                            ipAddress += "6";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_7)
-                        {
-                            ipAddress += "7";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_8)
-                        {
-                            ipAddress += "8";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_9)
-                        {
-                            ipAddress += "9";
-                        }
-                        else if (e.getKeyCode() == KeyEvent.VK_PERIOD)
-                        {
-                            ipAddress += ".";
-                        }
-                    }
-                    
-                    if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-                    {
-                        if(ipAddress.length()>0)
-                            ipAddress = ipAddress.substring(0, ipAddress.length()-1);
-                    }
+                    helpMenuActive = false;
+                    currentHelpPage = 0;
                 }
                 
-                
-                
-                
-                if (gameStarted || isConnecting)
+                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                 {
-                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !isConnecting)
-                    {
-                        if (gameStarted)
-
-                            if (isClient)
-                            {
-                                ClientHandler.sendDisconnect();
-                                ClientHandler.disconnect();
-                            }
-                            else
-                            {
-                                ServerHandler.sendDisconnect();
-                                ServerHandler.disconnect();
-                            }
-                        gameStarted = false;
-                    }
+                    if(ipAddress.length()>0)
+                        ipAddress = ipAddress.substring(0, ipAddress.length()-1);
                 }
+                
                 if(gameStart)
                 {
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE )
@@ -445,11 +301,6 @@ public class MonopolyProject extends JFrame implements Runnable {
                         //startMenuAnim=true;
                     }
                 }
-                       
-                
-                
-                
-
             }
         });
         init();
@@ -675,12 +526,39 @@ public class MonopolyProject extends JFrame implements Runnable {
         
         
         
+            
+            
+        
+        if(currentHelpPage == 1 && helpMenuActive)
+        {
+            drawHelpPage(helpPage1,getX(10),getHeight2()/20,0.0,1.0,0.75);
+        }
+        else if(currentHelpPage == 2 && helpMenuActive)
+        {
+            drawHelpPage(helpPage2,getX(10),getHeight2()/20,0.0,1.0,0.75);
+        }            
+
+        gOld.drawImage(image, 0, 0, null);  
     }
     
     
     
     
 ////////////////////////////////////////////////////////////////////////////
+        public void drawHelpPage(Image image,int xpos,int ypos,double rot,double xscale,
+            double yscale) {
+
+        g.translate(xpos,ypos);
+        g.rotate(rot  * Math.PI/180.0);
+        g.scale( xscale , yscale );
+
+        g.drawImage(image, null, this);
+
+        g.scale( 1.0/xscale,1.0/yscale );
+        g.rotate(-rot  * Math.PI/180.0);
+        g.translate(-xpos,-ypos);
+    }
+///////////////////////////////////////////////////////////////////////////////
 // needed for     implement runnable
     @Override
     public void run() {
@@ -812,7 +690,8 @@ public class MonopolyProject extends JFrame implements Runnable {
 //        music[3]=new sound("radagastthebrown.wav");
 //        music[4]=new sound("theadventurebegins.wav");
         
-        
+        helpMenuActive = false;
+        currentHelpPage = 0;
     }
 /////////////////////////////////////////////////////////////////////////
     public void animate() {
@@ -825,7 +704,9 @@ public class MonopolyProject extends JFrame implements Runnable {
                 ysize = getSize().height;
             }
             image1=Toolkit.getDefaultToolkit().getImage("b.GIF");
-            
+            helpPage1 = Toolkit.getDefaultToolkit().getImage("./Pictures/Help/helpPage1.png");
+            helpPage2 = Toolkit.getDefaultToolkit().getImage("./Pictures/Help/helpPage2.png");
+
             reset();
             animateFirstTime = false;
             
