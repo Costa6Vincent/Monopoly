@@ -92,7 +92,7 @@ public class LeftClick extends Mouse implements Runnable
                 upgradeArmy=false;
                 canUpgrade=false;
             }
-            if(currentProperty.getThePlayer()==null&&currentPerson.getMoney()>=currentProperty.getCost()&&currentProperty.getCanPurchase())
+            if(currentProperty.getThePlayer()==null&&currentProperty.getCanPurchase())
             {
                 if(xpos>=purchaseX&&xpos<purchaseX+purchaseLength&&ypos>purchaseY-YTITLE&&ypos<purchaseY+purchaseHeight-YTITLE)
                 {
@@ -244,17 +244,23 @@ public class LeftClick extends Mouse implements Runnable
 
             }
             Property currentProperty=property[currentPerson.getY()][currentPerson.getX()];
-//            if(currentProperty.getName().contentEquals("Smaug"))
-//            {
-//                Cards.Bad badCard=Cards.Bad.getRandomBadCard();
-//                badCard.Effect(currentPerson);
-//                
-//            }
-//            if(currentProperty.getName().contentEquals("Treasure"))
-//            {
-//                Cards.Good goodCard=Cards.Good.getRandomGoodCard();
-//                goodCard.Effect(currentPerson);
-//            }
+            if(currentProperty.getName().contentEquals("Smaug"))
+            {
+                Cards.Bad badCard=Cards.Bad.getRandomBadCard();
+                badCard.Effect(currentPerson);
+                drawBadCard=true;
+                
+            }
+            else
+                drawBadCard=false;
+            if(currentProperty.getName().contentEquals("Treasure"))
+            {
+                Cards.Good goodCard=Cards.Good.getRandomGoodCard();
+                goodCard.Effect(currentPerson);
+                drawGoodCard=true;
+            }
+            else
+                drawGoodCard=false;
             if(currentProperty.getIsJail())
             {
                 currentPerson.setInJail(true);

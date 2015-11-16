@@ -17,6 +17,17 @@ import java.util.Locale;
 import javax.sound.sampled.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import static monopoly.project.MonopolyProject.YTITLE;
+import static monopoly.project.MonopolyProject.boardAlloc;
+import static monopoly.project.MonopolyProject.currentPlayer;
+import static monopoly.project.MonopolyProject.getHeight2;
+import static monopoly.project.MonopolyProject.getWidth2;
+import static monopoly.project.MonopolyProject.getX;
+import static monopoly.project.MonopolyProject.getY;
+import static monopoly.project.MonopolyProject.numColumns;
+import static monopoly.project.MonopolyProject.numPlayers;
+import static monopoly.project.MonopolyProject.numRows;
+import static monopoly.project.MonopolyProject.players;
 import network.ClientHandler;
 import network.ServerHandler;
 
@@ -548,6 +559,7 @@ public class MonopolyProject extends JFrame implements Runnable {
             GUIs.PlayerInfoWindow.drawInfoWindow(g);
             g.setFont(font);
             String text=null;
+            g.setColor(Color.red);
             if(time.getHours()!=0&&time.getMinutes()!=0)
                 text = ("Hours:"+time.getHours()+" Minutes: "+time.getMinutes()+" Seconds: "+time.getSeconds());
             if(time.getHours()==0&&time.getMinutes()==0&&time.getSeconds()!=0)
@@ -555,7 +567,7 @@ public class MonopolyProject extends JFrame implements Runnable {
             if(time.getHours()==0&&time.getMinutes()!=0)
                 text = (" Minutes: "+time.getMinutes()+" Seconds: "+time.getSeconds());
             if(text!=null)
-                g.drawString(text,50,60);
+                g.drawString(text,boardAlloc/2-50,getHeight2()/2-50);
 
             String text2=null;
             for(int index=0;index<numPlayers;index++)
@@ -608,51 +620,51 @@ public class MonopolyProject extends JFrame implements Runnable {
 //        }
             
 //add or modify.   
-        if (!gameStarted)
-        {
-            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
-            g.setColor(Color.black);
-            g.drawString("Not Connected",100,150);
-            
-        }
-        else if (isClient)
-        {
-            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
-            g.setColor(Color.black);
-            g.drawString("The Client",100,150);
-        }
-        else
-        {
-            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
-            g.setColor(Color.black);
-            g.drawString("The Server",100,150);
-        }            
-
-
-        {
-            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
-            g.setColor(Color.black);
-            g.drawString("Client value " + clientValue,100,200);
-        }
-
-        {
-            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
-            g.setColor(Color.black);
-            g.drawString("Server value " + serverValue,100,300);
-            
-        }
-        
-            try
-            {
-                g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
-                g.setColor(Color.black);
-                g.drawString("Your IP address: " + InetAddress.getLocalHost().getHostAddress(), getX(10), getY(20));
-                g.drawString("Enter IP address: " + ipAddress, getX(10), getY(60));
-            }
-            catch (UnknownHostException e)
-            {
-                e.printStackTrace();
-            }
+//        if (!gameStarted)
+//        {
+//            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+//            g.setColor(Color.black);
+//            g.drawString("Not Connected",100,150);
+//            
+//        }
+//        else if (isClient)
+//        {
+//            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+//            g.setColor(Color.black);
+//            g.drawString("The Client",100,150);
+//        }
+//        else
+//        {
+//            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+//            g.setColor(Color.black);
+//            g.drawString("The Server",100,150);
+//        }            
+//
+//
+//        {
+//            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+//            g.setColor(Color.black);
+//            g.drawString("Client value " + clientValue,100,200);
+//        }
+//
+//        {
+//            g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+//            g.setColor(Color.black);
+//            g.drawString("Server value " + serverValue,100,300);
+//            
+//        }
+//        
+//            try
+//            {
+//                g.setFont(new Font("Comic Sans", Font.ROMAN_BASELINE, 20));
+//                g.setColor(Color.black);
+//                g.drawString("Your IP address: " + InetAddress.getLocalHost().getHostAddress(), getX(10), getY(20));
+//                g.drawString("Enter IP address: " + ipAddress, getX(10), getY(60));
+//            }
+//            catch (UnknownHostException e)
+//            {
+//                e.printStackTrace();
+//            }
             if(settings)
             {
                 GUIs.Settings.drawSettingsWindow(g);
@@ -997,11 +1009,24 @@ public class MonopolyProject extends JFrame implements Runnable {
         
         for(int index=0;index<numPlayers;index++)
         {
-            if(players[index].getMoney()<=0)
+            if(players[index].getMoney()<=0&&players[index].getInGame())
             {
                 players[index].SetInGame(false);
                 loseSound=new sound("./Sounds/Tones/lose.wav");
             }
+        }
+        for(int index=0;index<numPlayers;index++)
+        {
+            int count=0;
+            if(!players[index].getInGame())
+            {
+                count++;
+            }
+            if(count==3)
+            {
+                reset();
+            }
+                
         }
         
     }
@@ -1262,6 +1287,28 @@ class PanAndZoom extends MonopolyProject{
                     }   
                 }    
             }
+            String text2=null;
+            for(int index=0;index<numPlayers;index++)
+            {
+                xpos=getX(0)+players[index].getX()*boardAlloc/numColumns+index*10;
+                ypos=getY(0)+players[index].getY()*getHeight2()/numRows-YTITLE;
+                length=getWidth2()/numColumns*3/4;
+                height2=getHeight2()/numRows*3/4;
+                players[index].drawonBoard(ourGraphics, xpos, ypos+height2/2, length, height2, image);
+                g.setColor(Color.black);
+                text2 = players[index].getMoney()+"";
+                g.drawString(text2, xpos+length/2, ypos+length*3/4); 
+                if(index==currentPlayer)
+                {
+                    Stroke nice = ourGraphics.getStroke();
+                    float size=7.0f;
+                    ourGraphics.setStroke(new BasicStroke(size));
+                    g.setColor(players[index].getColor());
+                    ourGraphics.drawOval(xpos-length/4,ypos-height2/4,length+length/2,height2*2);
+                    ourGraphics.setStroke(nice);
+                }
+                
+            }
 
 	    // make sure you restore the original transform or else the drawing
 	    // of borders and other components might be messed up
@@ -1284,14 +1331,9 @@ class PanAndZoom extends MonopolyProject{
 	}
 	
 	public void mouseDragged(MouseEvent e) {
-	    
-	    // the size of the pan translations 
-	    // are defined by the current mouse location subtracted
-	    // from the reference location
 	    int deltaX = e.getX() - referenceX;
 	    int deltaY = e.getY() - referenceY;
 
-	    // make the reference point be the new mouse point. 
 	    referenceX = e.getX();
 	    referenceY = e.getY();
 	    

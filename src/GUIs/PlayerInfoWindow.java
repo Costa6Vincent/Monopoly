@@ -146,6 +146,11 @@ public class PlayerInfoWindow extends monopoly.project.MonopolyProject
             text2="Property Val: "+property[players[currentPlayer].getY()][players[currentPlayer].getX()].getCost();
             g.drawString(text2, boardAlloc+windowAlloc/3+size+20,230); 
         }
+        if(drawGoodCard)
+        {
+            
+        }
+        
         
         
     }

@@ -48,7 +48,7 @@ public class Good extends Cards
     
     public static Good getRandomGoodCard()
     {
-        int random=(int)(Math.random()*numCards+1);
+        int random=(int)(Math.random()*numCards);
         Good randomCard = card[random];
         return randomCard;
     }
